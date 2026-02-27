@@ -1,12 +1,14 @@
-const http = require('http');
+const express = require("express");
+require("dotenv").config();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("ZEITERSTRATS server is running 🚀");
 });
 
-const port = process.env.PORT || 3000;
-server.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+
