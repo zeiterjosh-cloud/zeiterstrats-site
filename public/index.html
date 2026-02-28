@@ -14,82 +14,68 @@ margin:0;
 font-family:Arial, sans-serif;
 background:#070b14;
 color:#e6ffff;
-overflow-x:hidden;
 }
 
-h1{font-size:56px;color:#00f7ff;text-align:center;}
-h2{text-align:center;}
+/* ===== Layout ===== */
 
-.section{
-padding:100px 20px;
-text-align:center;
-transition:opacity 0.6s ease, transform 0.6s ease;
+#landing, #dashboard{
+transition:opacity 0.5s ease;
 }
 
-.dark{background:#070b14;}
-.soft{background:#0c111c;}
+.hidden{
+display:none;
+}
+
+.sidebar{
+width:220px;
+background:#0c111c;
+position:fixed;
+top:0;
+left:0;
+height:100%;
+padding-top:40px;
+}
+
+.sidebar button{
+display:block;
+width:100%;
+background:none;
+color:#00f7ff;
+border:none;
+padding:15px;
+text-align:left;
+cursor:pointer;
+}
+
+.sidebar button:hover{
+background:#111827;
+}
+
+.content{
+margin-left:220px;
+padding:40px;
+}
+
+.tab{
+display:none;
+}
+
+.tab.active{
+display:block;
+}
 
 .panel{
 background:#111827;
 padding:20px;
-margin:15px auto;
-border-radius:12px;
-max-width:800px;
+margin-bottom:20px;
+border-radius:10px;
 }
 
-button{
-padding:12px 18px;
-margin:8px;
-border:none;
-border-radius:6px;
-background:#00f7ff;
-color:#000;
-font-weight:bold;
-cursor:pointer;
-}
-
-input{
-padding:10px;
-margin:6px;
-background:#111;
-border:1px solid #00f7ff;
-color:#fff;
-border-radius:6px;
-}
-
-.hidden{
-opacity:0;
-pointer-events:none;
-transform:translateY(20px);
-position:absolute;
-width:100%;
-}
-
-.visible{
-opacity:1;
-pointer-events:auto;
-transform:translateY(0);
-position:relative;
-}
-
-.live-indicator{
-color:#ff3b3b;
-font-weight:bold;
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-0%{opacity:1;}
-50%{opacity:0.4;}
-100%{opacity:1;}
-}
-
-.progress-bar{
-width:100%;
+.progress{
 background:#222;
+height:20px;
 border-radius:20px;
 overflow:hidden;
-margin-top:10px;
 }
 
 .progress-fill{
@@ -99,10 +85,27 @@ background:#7a5cff;
 transition:width 0.6s ease;
 }
 
-footer{
-padding:40px;
-text-align:center;
-opacity:0.6;
+button{
+padding:10px 15px;
+border:none;
+border-radius:6px;
+background:#00f7ff;
+color:#000;
+cursor:pointer;
+margin:5px 0;
+}
+
+input{
+padding:8px;
+margin:5px 0;
+background:#111;
+border:1px solid #00f7ff;
+color:#fff;
+border-radius:6px;
+}
+
+h1,h2{
+margin-top:0;
 }
 
 </style>
@@ -110,91 +113,118 @@ opacity:0.6;
 
 <body>
 
-<!-- LANDING PAGE -->
-<div id="landing" class="visible">
+<!-- LANDING -->
+<div id="landing">
 
-<section class="section dark">
+<div style="padding:100px;text-align:center;">
 <h1>ZEITERSTRATS</h1>
-<p id="liveStatus">Checking live status...</p>
-<button onclick="scrollToLogin()">Enter Platform</button>
-</section>
+<p id="liveStatus">Checking status...</p>
 
-<section class="section soft">
-<h2>Performance Overview</h2>
-<div class="panel">
-Earnings: $<span id="earnings">0</span>
-</div>
-</section>
-
-<section class="section dark" id="loginSection">
-<h2>Member Access</h2>
-
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-
-<br>
+<input id="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Password"><br>
 
 <button onclick="register()">Register</button>
 <button onclick="login()">Login</button>
-
-<p id="memberStatus"></p>
-
-</section>
+</div>
 
 </div>
 
-<!-- DASHBOARD (Hidden until login) -->
+<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
-<section class="section dark">
-<h1>Command Center</h1>
+<div class="sidebar">
+<button onclick="openTab('overview')">Overview</button>
+<button onclick="openTab('vault')">Vault</button>
+<button onclick="openTab('leaderboard')">Leaderboard</button>
+<button onclick="openTab('support')">Support</button>
+<button onclick="openTab('profile')">Profile</button>
+<button id="adminBtn" class="hidden" onclick="openTab('admin')">Admin</button>
 <button onclick="logout()">Logout</button>
-</section>
+</div>
 
-<section class="section soft">
-<h2>ZEITER Score</h2>
+<div class="content">
+
+<div id="overview" class="tab active">
+<h2>Overview</h2>
+
 <div class="panel">
-Score: <span id="score">0</span>
-<div class="progress-bar">
-<div id="xpBar" class="progress-fill"></div>
+ZEITER Score: <span id="score">0</span>
+<div class="progress"><div id="xpBar" class="progress-fill"></div></div>
 </div>
-</div>
-</section>
 
-<section class="section dark">
-<h2>Daily Streak</h2>
 <div class="panel">
-🔥 Streak: <span id="streak">1</span> days
+Earnings: $<span id="earnings">0</span>
 </div>
-</section>
 
-<section class="section soft">
+</div>
+
+<div id="vault" class="tab">
 <h2>Strategy Vault</h2>
 <button onclick="unlockVault()">Unlock Vault</button>
 <div id="vaultContent" class="panel hidden">
 Elite optimization routes unlocked.
 </div>
-</section>
+</div>
 
-<section class="section dark">
-<h2>Support the Platform</h2>
+<div id="leaderboard" class="tab">
+<h2>Leaderboard</h2>
 <div class="panel">
-Goal: $<span id="goalAmount">1000</span>
-<div class="progress-bar">
+Rank: Top <span id="percentile">100</span>%
+</div>
+</div>
+
+<div id="support" class="tab">
+<h2>Support</h2>
+<div class="panel">
+Goal Progress
+<div class="progress">
 <div id="goalBar" class="progress-fill"></div>
 </div>
 </div>
-</section>
+</div>
+
+<div id="profile" class="tab">
+<h2>Profile</h2>
+<div class="panel">
+Email: <span id="profileEmail"></span>
+</div>
+</div>
+
+<div id="admin" class="tab">
+<h2>Admin Control Panel</h2>
+
+<div class="panel">
+<h3>Adjust XP</h3>
+<input id="xpInput" placeholder="New XP">
+<button onclick="updateXP()">Update</button>
+</div>
+
+<div class="panel">
+<h3>Adjust Earnings</h3>
+<input id="earnInput" placeholder="New Earnings">
+<button onclick="updateEarnings()">Update</button>
+</div>
+
+<div class="panel">
+<h3>Adjust Donation</h3>
+<input id="donInput" placeholder="Amount Raised">
+<button onclick="updateDonation()">Update</button>
+</div>
+
+<div class="panel">
+<h3>System Stats</h3>
+Users Online: 1<br>
+Version: ZEITER OS v2
+</div>
 
 </div>
 
-<footer>
-© 2026 ZEITERSTRATS | Hybrid Engine v1
-</footer>
+</div>
+</div>
 
 <script>
 
-/* ================= SUPABASE ================= */
+/* ===== SUPABASE ===== */
 
 const supabase = window.supabase.createClient(
 "https://YOUR_PROJECT_ID.supabase.co",
@@ -202,15 +232,19 @@ const supabase = window.supabase.createClient(
 );
 
 let currentUser=null;
+let xp=420;
+let xpGoal=1000;
+let earnings=318400000;
+let donation=350;
+let donationGoal=1000;
 
-/* ================= AUTH ================= */
+/* ===== AUTH ===== */
 
 async function register(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
-const { error }=await supabase.auth.signUp({email,password});
-if(error) alert(error.message);
-else alert("Check email to confirm.");
+await supabase.auth.signUp({email,password});
+alert("Check email.");
 }
 
 async function login(){
@@ -229,60 +263,63 @@ await supabase.auth.signOut();
 location.reload();
 }
 
-/* ================= TRANSITION ================= */
-
 function enterDashboard(){
-document.getElementById("landing").classList.remove("visible");
 document.getElementById("landing").classList.add("hidden");
 document.getElementById("dashboard").classList.remove("hidden");
-document.getElementById("dashboard").classList.add("visible");
+document.getElementById("profileEmail").innerText=currentUser.email;
+
+if(currentUser.email==="YOUR_ADMIN_EMAIL"){
+document.getElementById("adminBtn").classList.remove("hidden");
+}
+updateUI();
 }
 
-/* ================= LIVE SIMULATION ================= */
+/* ===== TABS ===== */
 
-setTimeout(()=>{
-document.getElementById("liveStatus").innerHTML=
-'<span class="live-indicator">● LIVE NOW</span>';
-},1500);
-
-/* ================= EARNINGS ================= */
-
-let target=318400000;
-let current=0;
-
-function animate(){
-if(current<target){
-current+=5000000;
-document.getElementById("earnings").innerText=current.toLocaleString();
-requestAnimationFrame(animate);
+function openTab(id){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
-}
-animate();
 
-/* ================= XP SYSTEM ================= */
+/* ===== UI UPDATE ===== */
 
-let xp=420;
-let xpGoal=1000;
-
+function updateUI(){
 document.getElementById("score").innerText=xp;
 document.getElementById("xpBar").style.width=(xp/xpGoal*100)+"%";
+document.getElementById("earnings").innerText=earnings.toLocaleString();
+document.getElementById("goalBar").style.width=(donation/donationGoal*100)+"%";
+document.getElementById("percentile").innerText=100-Math.floor(xp/10);
+}
 
-/* ================= DONATION BAR ================= */
+/* ===== ADMIN FUNCTIONS ===== */
 
-let raised=350;
-let goal=1000;
+function updateXP(){
+xp=parseInt(document.getElementById("xpInput").value)||xp;
+updateUI();
+}
 
-document.getElementById("goalBar").style.width=(raised/goal*100)+"%";
+function updateEarnings(){
+earnings=parseInt(document.getElementById("earnInput").value)||earnings;
+updateUI();
+}
 
-/* ================= VAULT ================= */
+function updateDonation(){
+donation=parseInt(document.getElementById("donInput").value)||donation;
+updateUI();
+}
+
+/* ===== VAULT ===== */
 
 function unlockVault(){
 document.getElementById("vaultContent").classList.remove("hidden");
 }
 
-function scrollToLogin(){
-document.getElementById("loginSection").scrollIntoView({behavior:"smooth"});
-}
+/* ===== LIVE SIMULATION ===== */
+
+setTimeout(()=>{
+document.getElementById("liveStatus").innerHTML=
+"<span style='color:#ff3b3b;'>● LIVE NOW</span>";
+},1500);
 
 </script>
 
