@@ -250,24 +250,20 @@ async function register() {
   }
 }
 
-// LOGIN
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+// <div class="panel">
+<h2>Member Access</h2>
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
 
-  if (error) {
-    alert(error.message);
-  } else {
-    currentUser = data.user;
-    document.getElementById("memberStatus").innerText =
-      "Logged in as " + currentUser.email;
-  }
-}
+<br>
+
+<button class="btn" onclick="register()">Register</button>
+<button class="btn" onclick="login()">Login</button>
+<button class="btn" onclick="logout()">Logout</button>
+
+<div id="memberStatus"></div>
+</div>
 
 // CHECK SESSION ON LOAD
 async function checkSession() {
