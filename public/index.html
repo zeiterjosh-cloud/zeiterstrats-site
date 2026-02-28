@@ -1,212 +1,248 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ZEITERSTRATS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<title>ZEITERSTRATS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
 
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #050810;
-    color: white;
-    text-align: center;
-    transition: 0.4s ease;
-  }
+body {
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#050810;
+  color:white;
+  text-align:center;
+  transition:0.4s ease;
+}
 
-  body.operation {
-    background: #000;
-  }
+body.operation {
+  background:#000;
+}
 
-  header {
-    padding: 100px 20px 60px;
-  }
+header {
+  padding:100px 20px 60px;
+}
 
-  h1 {
-    font-size: 70px;
-    font-weight: 900;
-    letter-spacing: 6px;
-    cursor: pointer;
-    background: linear-gradient(90deg,#00e5ff,#7a5cff,#ff007f);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: 0.3s ease;
-  }
+h1 {
+  font-size:70px;
+  font-weight:900;
+  letter-spacing:6px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00e5ff,#7a5cff,#ff007f);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
-  .glow { text-shadow: 0 0 25px #ff007f; }
-  .gold { color: gold; -webkit-text-fill-color: gold; }
-  .pulse { animation: pulse 1s infinite; }
+.glow { text-shadow:0 0 25px #ff007f; }
+.gold { color:gold; -webkit-text-fill-color:gold; }
+.pulse { animation:pulse 1s infinite; }
 
-  @keyframes pulse {
-    0%{transform:scale(1)}
-    50%{transform:scale(1.05)}
-    100%{transform:scale(1)}
-  }
+@keyframes pulse {
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
 
-  .toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #111;
-    padding: 10px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    border: 1px solid #333;
-  }
+.toggle {
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#111;
+  padding:10px 18px;
+  border-radius:20px;
+  cursor:pointer;
+  border:1px solid #333;
+}
 
-  .btn {
-    display: inline-block;
-    margin: 12px;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: white;
-    background: linear-gradient(90deg,#7a5cff,#00e5ff);
-    transition: 0.3s ease;
-  }
+.btn {
+  display:inline-block;
+  margin:12px;
+  padding:12px 25px;
+  border-radius:8px;
+  text-decoration:none;
+  color:white;
+  background:linear-gradient(90deg,#7a5cff,#00e5ff);
+  transition:0.3s ease;
+}
 
-  .btn.live { background: red; box-shadow: 0 0 20px red; }
+.btn.live {
+  background:red;
+  box-shadow:0 0 20px red;
+}
 
-  section { padding: 80px 20px; }
+.donate-btn {
+  animation:glowPulse 2s infinite;
+}
 
-  .meter {
-    width: 60%;
-    height: 20px;
-    margin: 15px auto;
-    background: #222;
-    border-radius: 20px;
-    overflow: hidden;
-  }
+@keyframes glowPulse {
+  0%{box-shadow:0 0 10px #00e5ff;}
+  50%{box-shadow:0 0 25px #ff007f;}
+  100%{box-shadow:0 0 10px #00e5ff;}
+}
 
-  .meter-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg,#ff0000,#ff007f);
-    transition: width 1s ease;
-  }
+section {
+  padding:80px 20px;
+}
 
-  .rank-bar {
-    width: 60%;
-    height: 15px;
-    background: #222;
-    margin: 10px auto;
-    border-radius: 10px;
-    overflow: hidden;
-  }
+.meter,.upgrade-bar,.rank-bar {
+  width:60%;
+  height:20px;
+  margin:15px auto;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+}
 
-  .rank-fill {
-    height: 100%;
-    width: 45%;
-    background: linear-gradient(90deg,#00e5ff,#7a5cff);
-  }
+.meter-fill,.upgrade-fill,.rank-fill {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00e5ff,#7a5cff);
+  transition:width 1s ease;
+}
 
-  .cards {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
+.cards {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
 
-  .card {
-    background: #111;
-    padding: 20px;
-    width: 200px;
-    border-radius: 10px;
-    cursor: pointer;
-    border: 1px solid #333;
-    transition: 0.3s ease;
-  }
+.card {
+  background:#111;
+  padding:20px;
+  width:200px;
+  border-radius:10px;
+  cursor:pointer;
+  border:1px solid #333;
+  transition:0.3s ease;
+}
 
-  .card:hover { transform: translateY(-5px); }
+.card:hover { transform:translateY(-5px); }
 
-  .selected { border: 1px solid #00e5ff; }
+.selected { border:1px solid #00e5ff; }
 
-  .vault {
-    font-size: 20px;
-    padding: 30px;
-    border: 2px dashed #555;
-    cursor: pointer;
-  }
+.supporter-card {
+  background:#111;
+  padding:15px;
+  width:250px;
+  margin:10px auto;
+  border-radius:8px;
+  border:1px solid gold;
+  color:gold;
+}
 
-  input {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    margin: 5px;
-  }
+#leaderboard div {
+  margin:5px 0;
+}
 
-  footer { padding: 40px; opacity: 0.5; }
+.vault-door {
+  margin-top:30px;
+  padding:20px;
+  border:2px dashed #555;
+  cursor:pointer;
+  transition:0.3s ease;
+}
 
-  </style>
+.vault-door.open {
+  background:linear-gradient(90deg,#7a5cff,#00e5ff);
+  border:2px solid #00e5ff;
+}
+
+footer {
+  padding:40px;
+  opacity:0.5;
+}
+
+</style>
 </head>
+
 <body>
 
 <div class="toggle" onclick="toggleMode()">Switch Mode</div>
 
 <header>
-  <h1 id="logo" onclick="logoEffect()">ZEITERSTRATS</h1>
+<h1 id="logo" onclick="logoEffect()">ZEITERSTRATS</h1>
 
-  <div id="liveStatus">Checking status...</div>
-  <div id="streamTitle"></div>
-  <div id="viewerCount"></div>
+<div id="liveStatus">Checking status...</div>
+<div id="streamTitle"></div>
+<div id="viewerCount"></div>
 
-  <div class="meter"><div id="heatFill" class="meter-fill"></div></div>
+<div class="meter"><div id="heatFill" class="meter-fill"></div></div>
 
-  <a id="liveBtn" href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
-    Enter Live Operation
-  </a>
+<a id="liveBtn" href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
+Enter Live Operation
+</a>
 </header>
 
 <section>
-  <h2>ZEITERSTRATS RANK: 14</h2>
-  <div class="rank-bar"><div class="rank-fill"></div></div>
+<h2>ZEITERSTRATS RANK: 14</h2>
+<div class="rank-bar"><div id="rankFill" class="rank-fill" style="width:45%"></div></div>
 </section>
 
 <section>
-  <h2>Last Operation Results</h2>
-  ✔ $4.2M Earned<br>
-  ✔ 3 Heists Completed<br>
-  ✔ Rank +2
+<h2>Last Operation Results</h2>
+✔ $4.2M Earned<br>
+✔ 3 Heists Completed<br>
+✔ Rank +2
 </section>
 
 <section>
-  <h2>Choose Your Role</h2>
-  <div class="cards">
-    <div class="card" onclick="selectRole(this)">Solo Grinder</div>
-    <div class="card" onclick="selectRole(this)">Heist Specialist</div>
-    <div class="card" onclick="selectRole(this)">Market Analyst</div>
-    <div class="card" onclick="selectRole(this)">Casual Operator</div>
-  </div>
+<h2>Choose Your Role</h2>
+<div class="cards">
+<div class="card" onclick="selectRole(this)">Solo Grinder</div>
+<div class="card" onclick="selectRole(this)">Heist Specialist</div>
+<div class="card" onclick="selectRole(this)">Market Analyst</div>
+<div class="card" onclick="selectRole(this)">Casual Operator</div>
+</div>
 </section>
 
 <section>
-  <h2>Join The Tactical Unit</h2>
-  <input type="email" placeholder="Enter Email">
-  <button class="btn">Receive Briefings</button>
-</section>
+<h2>Support The Operation</h2>
 
-<section>
-  <h2>Merch Vault</h2>
-  <div class="vault" onclick="alert('Access Restricted — Deployment Pending 👀')">
-    🔒 Classified Vault — Coming Soon
-  </div>
+<a href="YOUR_DONATION_LINK_HERE" target="_blank"
+class="btn donate-btn" onclick="vaultEffect()">
+💰 Contribute To The Mission
+</a>
+
+<div style="margin-top:40px;">
+<h3>Next Upgrade Objective</h3>
+<div class="upgrade-bar">
+<div class="upgrade-fill" id="upgradeFill"></div>
+</div>
+<p>$<span id="currentAmount">420</span> /
+$<span id="goalAmount">1000</span> Secured</p>
+</div>
+
+<div style="margin-top:40px;">
+<h3>🏆 Supporter of the Week</h3>
+<div class="supporter-card" id="supporterOfWeek"></div>
+</div>
+
+<div style="margin-top:40px;">
+<h3>Top Tactical Supporters</h3>
+<div id="leaderboard"></div>
+</div>
+
+<div class="vault-door" id="vaultDoor">
+🔐 Secure Funding Vault
+</div>
 </section>
 
 <footer>
-  © 2026 ZEITERSTRATS
+© 2026 ZEITERSTRATS
 </footer>
 
 <script>
 
+// ===== IMMERSION =====
 function toggleMode(){
   document.body.classList.toggle("operation");
 }
 
 function logoEffect(){
-  const logo = document.getElementById("logo");
-  const effects = ["glow","gold","pulse"];
+  const logo=document.getElementById("logo");
+  const effects=["glow","gold","pulse"];
   logo.classList.remove("glow","gold","pulse");
-  const random = effects[Math.floor(Math.random()*effects.length)];
+  const random=effects[Math.floor(Math.random()*effects.length)];
   logo.classList.add(random);
 }
 
@@ -215,29 +251,28 @@ function selectRole(card){
   card.classList.add("selected");
 }
 
+// ===== LIVE SYSTEM =====
 async function checkLive(){
   try{
-    const res = await fetch("/api/live-status");
-    const data = await res.json();
+    const res=await fetch("/api/live-status");
+    const data=await res.json();
 
-    const status = document.getElementById("liveStatus");
-    const title = document.getElementById("streamTitle");
-    const viewers = document.getElementById("viewerCount");
-    const heat = document.getElementById("heatFill");
-    const btn = document.getElementById("liveBtn");
+    const status=document.getElementById("liveStatus");
+    const title=document.getElementById("streamTitle");
+    const viewers=document.getElementById("viewerCount");
+    const heat=document.getElementById("heatFill");
+    const btn=document.getElementById("liveBtn");
 
     if(data.live){
-      status.innerHTML = "🔴 LIVE NOW";
-      title.innerHTML = "Stream: " + data.title;
-      viewers.innerHTML = "Viewers: " + data.viewers;
+      status.innerHTML="🔴 LIVE NOW";
+      title.innerHTML="Stream: "+data.title;
+      viewers.innerHTML="Viewers: "+data.viewers;
       btn.classList.add("live");
-
-      let intensity = Math.min(100, data.viewers * 2);
-      heat.style.width = intensity + "%";
-
-    } else {
-      status.innerHTML = "⚫ Offline";
-      heat.style.width = "0%";
+      let intensity=Math.min(100,data.viewers*2);
+      heat.style.width=intensity+"%";
+    }else{
+      status.innerHTML="⚫ Offline";
+      heat.style.width="0%";
       btn.classList.remove("live");
     }
   }catch{
@@ -247,6 +282,60 @@ async function checkLive(){
 
 checkLive();
 setInterval(checkLive,60000);
+
+// ===== FUNDING SYSTEM =====
+let currentAmount=420;
+let goalAmount=1000;
+
+function updateProgress(){
+  const percent=(currentAmount/goalAmount)*100;
+  document.getElementById("upgradeFill").style.width=percent+"%";
+}
+
+updateProgress();
+
+function animateMoneyIncrease(amount){
+  let target=currentAmount+amount;
+  let interval=setInterval(()=>{
+    if(currentAmount>=target){clearInterval(interval);}
+    else{
+      currentAmount+=5;
+      document.getElementById("currentAmount").innerText=currentAmount;
+      updateProgress();
+    }
+  },20);
+}
+
+const supporters=["Commander Alpha","Shadow Operator","Night Tactician","Ghost Unit"];
+document.getElementById("supporterOfWeek").innerText =
+supporters[Math.floor(Math.random()*supporters.length)];
+
+const leaderboardData=[
+{name:"Commander Alpha",amount:150},
+{name:"Shadow Operator",amount:120},
+{name:"Night Tactician",amount:75}
+];
+
+function renderLeaderboard(){
+  const board=document.getElementById("leaderboard");
+  leaderboardData.sort((a,b)=>b.amount-a.amount);
+  leaderboardData.forEach((entry,index)=>{
+    const div=document.createElement("div");
+    div.innerText=`#${index+1} ${entry.name} — $${entry.amount}`;
+    board.appendChild(div);
+  });
+}
+
+renderLeaderboard();
+
+function vaultEffect(){
+  const vault=document.getElementById("vaultDoor");
+  vault.classList.add("open");
+  vault.innerHTML="🔓 Vault Accessed — Reinforcements Incoming";
+  const sound=new Audio("https://assets.mixkit.co/sfx/preview/mixkit-safe-unlock-1120.mp3");
+  sound.play();
+  animateMoneyIncrease(50);
+}
 
 </script>
 
