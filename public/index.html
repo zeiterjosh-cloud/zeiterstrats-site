@@ -8,104 +8,43 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 body{
 margin:0;
 font-family:Arial, sans-serif;
 background:#070b14;
 color:#e6ffff;
+text-align:center;
 }
 
-/* ===== Layout ===== */
+input{
+padding:10px;
+margin:8px;
+background:#111;
+border:1px solid #00f7ff;
+color:white;
+border-radius:6px;
+}
 
-#landing, #dashboard{
-transition:opacity 0.5s ease;
+button{
+padding:10px 18px;
+margin:8px;
+background:#00f7ff;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
 }
 
 .hidden{
 display:none;
 }
 
-.sidebar{
-width:220px;
-background:#0c111c;
-position:fixed;
-top:0;
-left:0;
-height:100%;
-padding-top:40px;
-}
-
-.sidebar button{
-display:block;
-width:100%;
-background:none;
-color:#00f7ff;
-border:none;
-padding:15px;
-text-align:left;
-cursor:pointer;
-}
-
-.sidebar button:hover{
-background:#111827;
-}
-
-.content{
-margin-left:220px;
-padding:40px;
-}
-
-.tab{
-display:none;
-}
-
-.tab.active{
-display:block;
-}
-
 .panel{
 background:#111827;
 padding:20px;
-margin-bottom:20px;
+margin:20px auto;
+max-width:600px;
 border-radius:10px;
-}
-
-.progress{
-background:#222;
-height:20px;
-border-radius:20px;
-overflow:hidden;
-}
-
-.progress-fill{
-height:20px;
-width:0%;
-background:#7a5cff;
-transition:width 0.6s ease;
-}
-
-button{
-padding:10px 15px;
-border:none;
-border-radius:6px;
-background:#00f7ff;
-color:#000;
-cursor:pointer;
-margin:5px 0;
-}
-
-input{
-padding:8px;
-margin:5px 0;
-background:#111;
-border:1px solid #00f7ff;
-color:#fff;
-border-radius:6px;
-}
-
-h1,h2{
-margin-top:0;
 }
 
 </style>
@@ -115,211 +54,92 @@ margin-top:0;
 
 <!-- LANDING -->
 <div id="landing">
-
-<div style="padding:100px;text-align:center;">
 <h1>ZEITERSTRATS</h1>
-<p id="liveStatus">Checking status...</p>
 
 <input id="email" placeholder="Email"><br>
 <input id="password" type="password" placeholder="Password"><br>
 
 <button onclick="register()">Register</button>
 <button onclick="login()">Login</button>
-</div>
 
+<p id="message"></p>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
+<h1>Dashboard</h1>
 
-<div class="sidebar">
-<button onclick="openTab('overview')">Overview</button>
-<button onclick="openTab('vault')">Vault</button>
-<button onclick="openTab('leaderboard')">Leaderboard</button>
-<button onclick="openTab('support')">Support</button>
-<button onclick="openTab('profile')">Profile</button>
-<button id="adminBtn" class="hidden" onclick="openTab('admin')">Admin</button>
+<div class="panel">
+ZEITER Score: <span id="score">420</span>
+</div>
+
 <button onclick="logout()">Logout</button>
-</div>
-
-<div class="content">
-
-<div id="overview" class="tab active">
-<h2>Overview</h2>
-
-<div class="panel">
-ZEITER Score: <span id="score">0</span>
-<div class="progress"><div id="xpBar" class="progress-fill"></div></div>
-</div>
-
-<div class="panel">
-Earnings: $<span id="earnings">0</span>
-</div>
-
-</div>
-
-<div id="vault" class="tab">
-<h2>Strategy Vault</h2>
-<button onclick="unlockVault()">Unlock Vault</button>
-<div id="vaultContent" class="panel hidden">
-Elite optimization routes unlocked.
-</div>
-</div>
-
-<div id="leaderboard" class="tab">
-<h2>Leaderboard</h2>
-<div class="panel">
-Rank: Top <span id="percentile">100</span>%
-</div>
-</div>
-
-<div id="support" class="tab">
-<h2>Support</h2>
-<div class="panel">
-Goal Progress
-<div class="progress">
-<div id="goalBar" class="progress-fill"></div>
-</div>
-</div>
-</div>
-
-<div id="profile" class="tab">
-<h2>Profile</h2>
-<div class="panel">
-Email: <span id="profileEmail"></span>
-</div>
-</div>
-
-<div id="admin" class="tab">
-<h2>Admin Control Panel</h2>
-
-<div class="panel">
-<h3>Adjust XP</h3>
-<input id="xpInput" placeholder="New XP">
-<button onclick="updateXP()">Update</button>
-</div>
-
-<div class="panel">
-<h3>Adjust Earnings</h3>
-<input id="earnInput" placeholder="New Earnings">
-<button onclick="updateEarnings()">Update</button>
-</div>
-
-<div class="panel">
-<h3>Adjust Donation</h3>
-<input id="donInput" placeholder="Amount Raised">
-<button onclick="updateDonation()">Update</button>
-</div>
-
-<div class="panel">
-<h3>System Stats</h3>
-Users Online: 1<br>
-Version: ZEITER OS v2
-</div>
-
-</div>
-
-</div>
 </div>
 
 <script>
 
-/* ===== SUPABASE ===== */
-
-const supabase = window.supabase.createClient(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjI0OTg1NCwiZXhwIjoyMDg3ODI1ODU0fQ.2FCOjxwydwdO5FlGY76eDedRfTO6IayuML1Oy0QeNG4
-"https://eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNDk4NTQsImV4cCI6MjA4NzgyNTg1NH0.swm1GeFu9iCzi_2XeskrESgz2rR2bVJlA7P3g0XVPyMsupabase.com",
-
+// 🔐 REPLACE THESE WITH YOUR REAL VALUES
+const supabase = window.supabase.createClient(
+"https://YOUR_PROJECT_URL.supabase.co",
+"YOUR_ANON_KEY"
 );
 
-let currentUser=null;
-let xp=420;
-let xpGoal=1000;
-let earnings=318400000;
-let donation=350;
-let donationGoal=1000;
+let currentUser = null;
 
-/* ===== AUTH ===== */
-
+// REGISTER
 async function register(){
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
-await supabase.auth.signUp({email,password});
-alert("Check email.");
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+const { data, error } = await supabase.auth.signUp({
+email: email,
+password: password
+});
+
+if(error){
+document.getElementById("message").innerText = error.message;
+}else{
+document.getElementById("message").innerText = "Check your email to confirm.";
+}
 }
 
+// LOGIN
 async function login(){
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
-const { data,error }=await supabase.auth.signInWithPassword({email,password});
-if(error) alert(error.message);
-else{
-currentUser=data.user;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+const { data, error } = await supabase.auth.signInWithPassword({
+email: email,
+password: password
+});
+
+if(error){
+document.getElementById("message").innerText = error.message;
+}else{
+currentUser = data.user;
 enterDashboard();
 }
 }
 
+// ENTER DASHBOARD
+function enterDashboard(){
+document.getElementById("landing").classList.add("hidden");
+document.getElementById("dashboard").classList.remove("hidden");
+}
+
+// LOGOUT
 async function logout(){
 await supabase.auth.signOut();
 location.reload();
 }
 
-function enterDashboard(){
-document.getElementById("landing").classList.add("hidden");
-document.getElementById("dashboard").classList.remove("hidden");
-document.getElementById("profileEmail").innerText=currentUser.email;
-
-if(currentUser.email==="YOUR_ADMIN_EMAIL"){
-document.getElementById("adminBtn").classList.remove("hidden");
+// SESSION CHECK (keeps login after refresh)
+supabase.auth.getSession().then(({ data })=>{
+if(data.session){
+currentUser = data.session.user;
+enterDashboard();
 }
-updateUI();
-}
-
-/* ===== TABS ===== */
-
-function openTab(id){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-
-/* ===== UI UPDATE ===== */
-
-function updateUI(){
-document.getElementById("score").innerText=xp;
-document.getElementById("xpBar").style.width=(xp/xpGoal*100)+"%";
-document.getElementById("earnings").innerText=earnings.toLocaleString();
-document.getElementById("goalBar").style.width=(donation/donationGoal*100)+"%";
-document.getElementById("percentile").innerText=100-Math.floor(xp/10);
-}
-
-/* ===== ADMIN FUNCTIONS ===== */
-
-function updateXP(){
-xp=parseInt(document.getElementById("xpInput").value)||xp;
-updateUI();
-}
-
-function updateEarnings(){
-earnings=parseInt(document.getElementById("earnInput").value)||earnings;
-updateUI();
-}
-
-function updateDonation(){
-donation=parseInt(document.getElementById("donInput").value)||donation;
-updateUI();
-}
-
-/* ===== VAULT ===== */
-
-function unlockVault(){
-document.getElementById("vaultContent").classList.remove("hidden");
-}
-
-/* ===== LIVE SIMULATION ===== */
-
-setTimeout(()=>{
-document.getElementById("liveStatus").innerHTML=
-"<span style='color:#ff3b3b;'>● LIVE NOW</span>";
-},1500);
+});
 
 </script>
 
