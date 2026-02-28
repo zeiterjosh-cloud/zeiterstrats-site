@@ -5,39 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZEITERSTRATS</title>
 
+<!-- LAYER 1 — EXTERNAL LIBRARIES -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<!-- LAYER 2 — STYLE SYSTEM -->
 <style>
-body{margin:0;font-family:sans-serif;background:#0a0a0f;color:#e6ffff;text-align:center}
-header{padding:80px 20px}
-h1{font-size:48px;color:#00f7ff;text-shadow:0 0 20px #00f7ff}
-.section{max-width:1000px;margin:auto;padding:60px 20px}
-.panel{background:rgba(20,20,30,0.6);border:1px solid #00f7ff;padding:30px;margin:25px 0;border-radius:12px}
-.btn{padding:10px 20px;border:1px solid #00f7ff;background:none;color:#00f7ff;cursor:pointer}
-.btn:hover{background:#00f7ff;color:black}
+
+/* CORE */
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#070b14;
+color:#e6ffff;
+text-align:center;
+}
+
+h1{
+font-size:52px;
+color:#00f7ff;
+text-shadow:0 0 25px #00f7ff;
+}
+
+.section{
+max-width:1000px;
+margin:auto;
+padding:60px 20px;
+}
+
+.panel{
+background:rgba(15,20,30,0.7);
+border:1px solid #00f7ff;
+padding:30px;
+margin:25px 0;
+border-radius:14px;
+}
+
+.btn{
+padding:10px 20px;
+border:1px solid #00f7ff;
+background:none;
+color:#00f7ff;
+cursor:pointer;
+margin:5px;
+}
+
+.btn:hover{
+background:#00f7ff;
+color:#000;
+}
+
 .hidden{display:none}
-.bar{width:70%;height:14px;background:#111;margin:20px auto;border-radius:10px;overflow:hidden}
-.fill{height:100%;width:0;background:linear-gradient(90deg,#00f7ff,#7a5cff)}
+
+.bar{
+width:70%;
+height:14px;
+background:#111;
+margin:20px auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+width:0;
+background:linear-gradient(90deg,#00f7ff,#7a5cff);
+}
+
+input{
+padding:8px;
+margin:6px;
+background:#111;
+border:1px solid #00f7ff;
+color:#fff;
+}
+
 </style>
 </head>
 
 <body>
 
-<header>
+<!-- LAYER 3 — HERO -->
+<header class="section">
 <h1>ZEITERSTRATS</h1>
-<p>High-Level Strategy</p>
+<p>Strategic Intelligence. Competitive Precision.</p>
 <div id="liveStatus">Offline</div>
 <a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live</a>
 </header>
 
 <div class="section">
 
+<!-- LAYER 4 — PERFORMANCE PANEL -->
 <div class="panel">
 <h2>Operations Overview</h2>
 <div>Total Earnings: $<span id="earnings">0</span></div>
-<div>Streak: <span id="streak"></span> days</div>
+<div>Stream Streak: <span id="streak">0</span> days</div>
 </div>
 
+<!-- LAYER 5 — AUTH SYSTEM -->
 <div class="panel">
 <h2>Member Access</h2>
 <input type="email" id="email" placeholder="Email">
@@ -46,36 +110,43 @@ h1{font-size:48px;color:#00f7ff;text-shadow:0 0 20px #00f7ff}
 <button class="btn" onclick="login()">Login</button>
 <button class="btn" onclick="logout()">Logout</button>
 <div id="memberStatus"></div>
-<button class="btn hidden" id="dashBtn" onclick="openDash()">Dashboard</button>
+<button class="btn hidden" id="dashBtn" onclick="openDash()">Open Dashboard</button>
 </div>
 
+<!-- LAYER 6 — VAULT -->
 <div class="panel">
 <h2>Optimization Vault</h2>
-<button class="btn" onclick="unlockVault()">Access</button>
+<button class="btn" onclick="unlockVault()">Access Vault</button>
 <div id="vault" class="hidden">
-<p>Advanced Rotation Stack</p>
-<p>Passive Sync Execution</p>
+<p>✔ Advanced Rotation Stack</p>
+<p>✔ Passive Income Sync</p>
+<p>✔ High Efficiency Route Planning</p>
 </div>
 </div>
 
+<!-- LAYER 7 — DASHBOARD -->
 <div class="panel hidden" id="dashboard">
 <h2>Operator Dashboard</h2>
 <div>Rank: <span id="rank"></span></div>
 <div>Visits: <span id="visits"></span></div>
-<div>Login Streak: <span id="loginStreak"></span></div>
+<div>Status: <span id="status"></span></div>
 </div>
 
+<!-- LAYER 8 — DONATION PROGRESS -->
 <div class="panel">
-<h2>Upgrade Fund</h2>
-<div class="bar"><div id="goalFill" class="fill"></div></div>
+<h2>Upgrade the Stream</h2>
+<div class="bar">
+<div id="goalFill" class="fill"></div>
+</div>
 <div id="goalText"></div>
 </div>
 
 </div>
 
+<!-- LAYER 9 — APPLICATION LOGIC -->
 <script>
 
-    <script>
+/* SUPABASE CONNECT */
 const supabase = window.supabase.createClient(
 "YOUR_SUPABASE_URL",
 "YOUR_ANON_KEY"
@@ -83,6 +154,21 @@ const supabase = window.supabase.createClient(
 
 let currentUser = null;
 
+/* VISIT SYSTEM */
+let visits = localStorage.getItem("visits") || 0;
+visits++;
+localStorage.setItem("visits", visits);
+
+/* RANK SYSTEM */
+function getRank(){
+if(visits>50) return "Inner Circle";
+if(visits>30) return "Elite Operator";
+if(visits>15) return "Strategist";
+if(visits>5) return "Initiate";
+return "Observer";
+}
+
+/* AUTH */
 async function register(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
@@ -99,6 +185,7 @@ if(error) alert(error.message);
 else{
 currentUser=data.user;
 document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
+document.getElementById("dashBtn").classList.remove("hidden");
 }
 }
 
@@ -112,11 +199,55 @@ const { data } = await supabase.auth.getUser();
 if(data.user){
 currentUser=data.user;
 document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
+document.getElementById("dashBtn").classList.remove("hidden");
+}
+}
+checkSession();
+
+/* VAULT LOCK */
+function unlockVault(){
+if(currentUser){
+document.getElementById("vault").classList.remove("hidden");
+}
+else{
+alert("Login required.");
 }
 }
 
-checkSession();
+/* DASHBOARD */
+function openDash(){
+document.getElementById("dashboard").classList.remove("hidden");
+document.getElementById("rank").innerText=getRank();
+document.getElementById("visits").innerText=visits;
+document.getElementById("status").innerText="Active";
+}
+
+/* EARNINGS ANIMATION */
+let target=318400000;
+let current=0;
+
+function animate(){
+if(current<target){
+current+=2500000;
+document.getElementById("earnings").innerText=current.toLocaleString();
+requestAnimationFrame(animate);
+}}
+animate();
+
+/* STREAK CALCULATION */
+let last=new Date("2026-03-10");
+let now=new Date();
+let diff=Math.ceil(Math.abs(now-last)/(1000*60*60*24));
+document.getElementById("streak").innerText=diff;
+
+/* DONATION BAR */
+let raised=420;
+let goal=1000;
+let percent=(raised/goal)*100;
+document.getElementById("goalFill").style.width=percent+"%";
+document.getElementById("goalText").innerText="$"+raised+" / $"+goal;
+
 </script>
-    
-    </body>
-    </html>
+
+</body>
+</html>
