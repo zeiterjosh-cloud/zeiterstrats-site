@@ -11,148 +11,205 @@ margin:0;
 font-family:Arial, sans-serif;
 background:#070b14;
 color:#e6ffff;
+text-align:center;
 }
 
-.sidebar{
-width:220px;
-background:#0c111c;
-position:fixed;
-top:0;
-left:0;
-height:100%;
-padding-top:40px;
+.hero{
+padding:80px 20px;
 }
 
-.sidebar button{
-display:block;
-width:100%;
-background:none;
-color:#00f7ff;
+h1{
+font-size:48px;
+margin-bottom:10px;
+}
+
+.tagline{
+opacity:0.7;
+margin-bottom:30px;
+}
+
+.cta{
+padding:14px 24px;
+margin:10px;
 border:none;
-padding:15px;
-text-align:left;
+border-radius:8px;
+font-weight:bold;
 cursor:pointer;
 }
 
-.sidebar button:hover{
-background:#111827;
+.live{
+background:#00ff88;
+color:#000;
+box-shadow:0 0 15px #00ff88;
 }
 
-.content{
-margin-left:220px;
-padding:40px;
+.offline{
+background:#444;
+color:#fff;
 }
 
-.tab{
-display:none;
+.section{
+padding:60px 20px;
 }
 
-.tab.active{
-display:block;
-}
-
-.panel{
+.card{
 background:#111827;
 padding:20px;
-margin-bottom:20px;
-border-radius:10px;
+margin:20px auto;
+max-width:600px;
+border-radius:12px;
 }
 
-.progress{
-background:#222;
-height:20px;
-border-radius:20px;
-overflow:hidden;
-}
-
-.progress-fill{
-height:20px;
-width:50%;
-background:#7a5cff;
-}
-
-button{
-padding:10px 15px;
-border:none;
-border-radius:6px;
-background:#00f7ff;
-color:#000;
-cursor:pointer;
-margin:5px 0;
-}
-
-h1,h2{
-margin-top:0;
+.admin{
+position:fixed;
+bottom:10px;
+right:10px;
+background:#111;
+padding:10px;
+border-radius:8px;
+display:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-<button onclick="openTab('overview')">Overview</button>
-<button onclick="openTab('vault')">Vault</button>
-<button onclick="openTab('leaderboard')">Leaderboard</button>
-<button onclick="openTab('support')">Support</button>
-<button onclick="openTab('profile')">Profile</button>
+<div class="hero">
+<h1 id="logo">ZEITERSTRATS</h1>
+<div class="tagline">Strategy > Luck. Execution > Emotion.</div>
+
+<div id="liveStatus">Checking stream status...</div>
+<div id="viewerCount"></div>
+
+<button id="twitchBtn" class="cta offline">Loading...</button>
+<button class="cta" onclick="trackClick('youtube'); window.open('https://youtube.com/@ZEITERSTRATS')">Latest Video</button>
 </div>
 
-<div class="content">
-
-<div id="overview" class="tab active">
-<h2>Overview</h2>
-
-<div class="panel">
-ZEITER Score: 420
-<div class="progress">
-<div class="progress-fill"></div>
-</div>
+<div class="section">
+<div class="card">
+<h2>Why Watch ZEITERSTRATS?</h2>
+<p>Calm dominance. Tactical execution. No wasted movement.</p>
 </div>
 
-<div class="panel">
-Earnings: $318,400,000
+<div class="card">
+<h2>ZEITER Setup</h2>
+<p><a href="#" onclick="trackClick('affiliate')">🎧 Headset</a></p>
+<p><a href="#" onclick="trackClick('affiliate')">🎙 Mic</a></p>
+<p><a href="#" onclick="trackClick('affiliate')">🖱 Mouse</a></p>
 </div>
 
-</div>
-
-<div id="vault" class="tab">
-<h2>Strategy Vault</h2>
-<div class="panel">
-Elite optimization routes unlocked.
+<div class="card">
+<h2>Support the Growth</h2>
+<p>Stream upgrades. Bigger drops. Better content.</p>
+<button class="cta" onclick="trackClick('donation')">Support</button>
 </div>
 </div>
 
-<div id="leaderboard" class="tab">
-<h2>Leaderboard</h2>
-<div class="panel">
-Rank: Top 15%
-</div>
-</div>
-
-<div id="support" class="tab">
-<h2>Support</h2>
-<div class="panel">
-Donation Goal: 35%
-<div class="progress">
-<div class="progress-fill" style="width:35%"></div>
-</div>
-</div>
-</div>
-
-<div id="profile" class="tab">
-<h2>Profile</h2>
-<div class="panel">
-ZEITERSTRATS Platform v2
-</div>
-</div>
-
+<!-- ADMIN PANEL -->
+<div class="admin" id="adminPanel">
+<h3>Admin</h3>
+<input id="nextStreamInput" placeholder="Next stream (e.g. Saturday 7PM EST)">
+<button onclick="saveSchedule()">Save</button>
 </div>
 
 <script>
-function openTab(id){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+
+// ===== SETTINGS =====
+const CLIENT_ID = "YOUR_TWITCH_CLIENT_ID";
+const ACCESS_TOKEN = "YOUR_TWITCH_ACCESS_TOKEN";
+const CHANNEL_NAME = "zeiterstrats"; // your twitch username
+
+// ===== ADMIN TOGGLE (press ` key) =====
+document.addEventListener("keydown", e=>{
+if(e.key==="`"){
+document.getElementById("adminPanel").style.display="block";
 }
+});
+
+// ===== SAVE SCHEDULE =====
+function saveSchedule(){
+const val = document.getElementById("nextStreamInput").value;
+localStorage.setItem("nextStream", val);
+alert("Saved.");
+}
+
+// ===== TRACK CLICKS =====
+function trackClick(type){
+let logs = JSON.parse(localStorage.getItem("clickLogs") || "[]");
+logs.push({type, time: new Date().toISOString()});
+localStorage.setItem("clickLogs", JSON.stringify(logs));
+}
+
+// ===== TWITCH LIVE CHECK =====
+async function checkLive(){
+
+try{
+
+const userRes = await fetch(`https://api.twitch.tv/helix/users?login=${CHANNEL_NAME}`,{
+headers:{
+"Client-ID": CLIENT_ID,
+"Authorization": "Bearer " + ACCESS_TOKEN
+}
+});
+
+const userData = await userRes.json();
+const userId = userData.data[0].id;
+
+const streamRes = await fetch(`https://api.twitch.tv/helix/streams?user_id=${userId}`,{
+headers:{
+"Client-ID": CLIENT_ID,
+"Authorization": "Bearer " + ACCESS_TOKEN
+}
+});
+
+const streamData = await streamRes.json();
+
+const statusEl = document.getElementById("liveStatus");
+const viewerEl = document.getElementById("viewerCount");
+const btn = document.getElementById("twitchBtn");
+
+if(streamData.data.length > 0){
+
+const viewers = streamData.data[0].viewer_count;
+
+statusEl.innerHTML = "🟢 LIVE RIGHT NOW";
+viewerEl.innerHTML = `👥 ${viewers} watching`;
+
+btn.innerText = "🔥 WATCH LIVE";
+btn.classList.remove("offline");
+btn.classList.add("live");
+btn.onclick = ()=>{
+trackClick('twitch');
+window.open("https://twitch.tv/"+CHANNEL_NAME);
+};
+
+}else{
+
+statusEl.innerHTML = "🔴 Offline";
+viewerEl.innerHTML = localStorage.getItem("nextStream") 
+? "Next Stream: " + localStorage.getItem("nextStream")
+: "";
+
+btn.innerText = "Follow on Twitch";
+btn.classList.remove("live");
+btn.classList.add("offline");
+btn.onclick = ()=>{
+trackClick('twitch');
+window.open("https://twitch.tv/"+CHANNEL_NAME);
+};
+
+}
+
+}catch(e){
+document.getElementById("liveStatus").innerHTML="Stream status unavailable.";
+}
+
+}
+
+// CHECK EVERY 60 SECONDS
+checkLive();
+setInterval(checkLive,60000);
+
 </script>
 
 </body>
