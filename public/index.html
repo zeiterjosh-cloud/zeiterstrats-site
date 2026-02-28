@@ -24,7 +24,6 @@ h1{
 font-size:56px;
 margin-bottom:10px;
 transition:0.3s;
-cursor:pointer;
 }
 
 h1:hover{
@@ -65,6 +64,14 @@ color:#fff;
 
 .section{
 padding:80px 20px;
+opacity:0;
+transform:translateY(20px);
+transition:0.6s ease;
+}
+
+.section.visible{
+opacity:1;
+transform:translateY(0);
 }
 
 .card{
@@ -77,22 +84,9 @@ box-shadow:0 0 25px rgba(0,247,255,0.1);
 }
 
 .stat{
-font-size:40px;
-font-weight:bold;
+font-size:32px;
 color:#00f7ff;
-}
-
-.progress-bar{
-background:#222;
-border-radius:20px;
-overflow:hidden;
-margin-top:20px;
-}
-
-.progress-fill{
-height:20px;
-background:#00f7ff;
-width:50%;
+font-weight:bold;
 }
 
 iframe{
@@ -119,8 +113,43 @@ Latest Video
 </button>
 
 <div id="countdown" style="margin-top:25px;font-weight:bold;"></div>
-<div id="liveBadge" style="margin-top:10px;font-weight:bold;"></div>
+</div>
 
+<!-- STRATEGY SELECTOR -->
+<div class="section">
+<h2>Choose Your Grind Style</h2>
+<div class="card">
+<button class="button secondary" onclick="showStrategy('solo')">Solo Grinder</button>
+<button class="button secondary" onclick="showStrategy('rank')">Rank Racer</button>
+<button class="button secondary" onclick="showStrategy('passive')">Passive Builder</button>
+
+<div id="strategyOutput" style="margin-top:20px;"></div>
+</div>
+</div>
+
+<!-- WEEKLY INSIGHT -->
+<div class="section">
+<h2>Weekly Strategy Insight</h2>
+<div class="card">
+<div class="stat">Best ROI This Week</div>
+Nightclub + Agency Combo<br><br>
+Focus on passive income stacking before active grind cycles.
+</div>
+</div>
+
+<!-- SCOREBOARD -->
+<div class="section">
+<h2>ZEITERSTRATS Scoreboard</h2>
+<div class="card">
+<div class="stat" id="methods">0</div>
+Methods Tested<br><br>
+
+<div class="stat" id="streams">0</div>
+Streams Completed<br><br>
+
+<div class="stat" id="community">0</div>
+Community Members
+</div>
 </div>
 
 <!-- LIVE STREAM -->
@@ -134,105 +163,102 @@ allowfullscreen>
 </div>
 </div>
 
-<!-- SUB GOAL -->
-<div class="section">
-<h2>Sub Goal</h2>
-<div class="card">
-5 / 10 Subs
-<div class="progress-bar">
-<div class="progress-fill"></div>
-</div>
-</div>
-</div>
-
-<!-- CLIP WALL -->
-<div class="section">
-<h2>Top Strategy Clips</h2>
-<div class="card">
-<iframe src="https://clips.twitch.tv/embed?clip=AwkwardHelplessDonutKreygasm&parent=zeiterstrats-site-1.onrender.com"></iframe>
-</div>
-</div>
-
-<!-- WHY ZEITERSTRATS -->
-<div class="section">
-<h2>Why Watch ZEITERSTRATS?</h2>
-<div class="card">
-✔ No clickbait methods<br><br>
-✔ Real tested profit strategies<br><br>
-✔ Solo-friendly breakdowns<br><br>
-✔ Xbox-focused insights<br><br>
-✔ Smart grind optimization
-</div>
-</div>
-
 <footer style="padding:40px;opacity:0.6;">
 © 2026 ZEITERSTRATS
 </footer>
 
 <script>
 
-// ===== ROTATING WEEKEND COUNTDOWN =====
+// ===== SAFE FADE IN =====
+const sections = document.querySelectorAll('.section');
+window.addEventListener('scroll',()=>{
+sections.forEach(sec=>{
+const rect = sec.getBoundingClientRect();
+if(rect.top < window.innerHeight - 100){
+sec.classList.add('visible');
+}
+});
+});
+
+// ===== COUNTDOWN WEEKEND ROTATION =====
 function getNextWeekend(){
 const now = new Date();
-let day = now.getDay();
-
-let daysUntilSaturday = (6 - day + 7) % 7;
-let daysUntilSunday = (7 - day) % 7;
-
-let nextDay;
-
-if(daysUntilSaturday === 0 || daysUntilSaturday < daysUntilSunday){
-nextDay = 6;
-}else{
-nextDay = 0;
-}
-
 let target = new Date();
-target.setDate(now.getDate() + ((nextDay - day + 7) % 7));
-target.setHours(15,0,0,0); // 3PM
-
+let day = now.getDay();
+let daysUntilSaturday = (6 - day + 7) % 7;
+target.setDate(now.getDate() + daysUntilSaturday);
+target.setHours(15,0,0,0);
 if(target < now){
 target.setDate(target.getDate()+7);
 }
-
 return target;
 }
 
 function updateCountdown(){
+const el = document.getElementById("countdown");
+if(!el) return;
+
 const now = new Date();
 const target = getNextWeekend();
 const diff = target - now;
 
-const d = Math.floor(diff / (1000*60*60*24));
-const h = Math.floor((diff / (1000*60*60)) % 24);
-const m = Math.floor((diff / (1000*60)) % 60);
+const d = Math.floor(diff/(1000*60*60*24));
+const h = Math.floor((diff/(1000*60*60))%24);
+const m = Math.floor((diff/(1000*60))%60);
 
-document.getElementById("countdown").innerHTML =
-"Next Stream: " + target.toLocaleDateString() + " 3PM<br>Starts in: " + d + "d " + h + "h " + m + "m";
+el.innerHTML = "Next Stream: Saturday 3PM<br>Starts in: "+d+"d "+h+"h "+m+"m";
 }
 
 setInterval(updateCountdown,60000);
 updateCountdown();
 
-// ===== LIVE BADGE =====
-async function checkLive(){
-try{
-const res = await fetch("https://decapi.me/twitch/uptime/zeiterstrats");
-const text = await res.text();
-const badge = document.getElementById("liveBadge");
+// ===== STRATEGY SELECTOR =====
+function showStrategy(type){
+const out = document.getElementById("strategyOutput");
+if(!out) return;
 
-if(text.toLowerCase().includes("offline")){
-badge.innerHTML="🔴 Currently Offline";
-badge.style.color="#ff4d4d";
-}else{
-badge.innerHTML="🟢 LIVE RIGHT NOW";
-badge.style.color="#00ff88";
+if(type==="solo"){
+out.innerHTML="Focus on Cayo Perico + Passive Nightclub stacking.";
 }
-}catch{}
+if(type==="rank"){
+out.innerHTML="Maximize contact missions during double RP weeks.";
+}
+if(type==="passive"){
+out.innerHTML="Stack Bunker + Agency for low-effort cash cycles.";
+}
 }
 
-checkLive();
-setInterval(checkLive,60000);
+// ===== SCOREBOARD ANIMATION =====
+function animateValue(id,end){
+let obj=document.getElementById(id);
+if(!obj) return;
+let start=0;
+let increment=end/100;
+let timer=setInterval(()=>{
+start+=increment;
+if(start>=end){
+start=end;
+clearInterval(timer);
+}
+obj.innerText=Math.floor(start);
+},20);
+}
+
+animateValue("methods",86);
+animateValue("streams",142);
+animateValue("community",512);
+
+// ===== HIDDEN ADMIN MODE =====
+let keyPressCount=0;
+document.addEventListener("keydown",function(e){
+if(e.key==="z" || e.key==="Z"){
+keyPressCount++;
+if(keyPressCount===3){
+alert("Admin Mode Activated (Frontend Only)");
+keyPressCount=0;
+}
+}
+});
 
 </script>
 
