@@ -112,66 +112,94 @@ display:none;
 <button onclick="saveSchedule()">Save</button>
 </div>
 
-<script>
+<// ===== ULTIMATE VAULT SYSTEM =====
 
-// ===== SETTINGS =====
-const CLIENT_ID = "YOUR_TWITCH_CLIENT_ID";
-const ACCESS_TOKEN = "YOUR_TWITCH_ACCESS_TOKEN";
-const CHANNEL_NAME = "zeiterstrats"; // your twitch username
+const CODES = {
+basic: "ZEITER2026",
+elite: "EXECUTION",
+founder: "INNERSTRAT",
+easter: "STRATGOD"
+};
 
-// ===== ADMIN TOGGLE (press ` key) =====
-document.addEventListener("keydown", e=>{
-if(e.key==="`"){
-document.getElementById("adminPanel").style.display="block";
-}
-});
-
-// ===== SAVE SCHEDULE =====
-function saveSchedule(){
-const val = document.getElementById("nextStreamInput").value;
-localStorage.setItem("nextStream", val);
-alert("Saved.");
+function getWeeklyCode(){
+const now = new Date();
+const week = Math.floor(now.getTime() / (1000*60*60*24*7));
+return "Z" + week;
 }
 
-// ===== TRACK CLICKS =====
-function trackClick(type){
-let logs = JSON.parse(localStorage.getItem("clickLogs") || "[]");
-logs.push({type, time: new Date().toISOString()});
-localStorage.setItem("clickLogs", JSON.stringify(logs));
+function unlockVault(){
+const input = document.getElementById("vaultCode").value.trim();
+const message = document.getElementById("vaultMessage");
+
+let tier = null;
+
+if(input === CODES.basic) tier = "Basic";
+if(input === CODES.elite) tier = "Elite";
+if(input === CODES.founder) tier = "Founder";
+if(input === CODES.easter) tier = "Easter";
+if(input === getWeeklyCode()) tier = "Weekly";
+
+if(tier){
+
+// Animated unlock flash
+document.body.style.transition="0.3s";
+document.body.style.background="#001f1f";
+
+setTimeout(()=>{
+document.body.style.background="#070b14";
+},300);
+
+document.getElementById("vaultLocked").style.display="none";
+document.getElementById("vaultContent").style.display="block";
+
+let content = `
+<h3>💎 ${tier} Vault Access Granted</h3>
+<ul style="text-align:left; max-width:600px; margin:0 auto;">
+<li>🔥 Advanced Solo Routing</li>
+<li>📊 Profit Pattern Matrix</li>
+<li>🎯 Rank Acceleration Logic</li>
+<li>💰 Cash Optimization Cycles</li>
+<li>🧠 Strategic Buy Windows</li>
+</ul>
+<br>
+<button class="button secondary" onclick="lockVault()">
+Lock Vault
+</button>
+`;
+
+if(tier === "Easter"){
+content = `
+<h3>👑 STRATEGY GOD MODE UNLOCKED</h3>
+<p style="color:#00f7ff;font-weight:bold;">
+You found the hidden tier.
+</p>
+<ul style="text-align:left; max-width:600px; margin:0 auto;">
+<li>🧠 Hidden Economic Exploit Mapping</li>
+<li>📈 Market Cycle Prediction Logic</li>
+<li>🔥 Stream Drop Multiplier Boost</li>
+<li>🎮 Elite Route Optimization Blueprint</li>
+</ul>
+<br>
+<button class="button secondary" onclick="lockVault()">
+Lock Vault
+</button>
+`;
 }
 
-// ===== TWITCH LIVE CHECK =====
-async function checkLive(){
+document.getElementById("vaultContent").innerHTML = content;
+message.innerHTML="";
 
-try{
-
-const userRes = await fetch(`https://api.twitch.tv/helix/users?login=${CHANNEL_NAME}`,{
-headers:{
-"Client-ID": CLIENT_ID,
-"Authorization": "Bearer " + ACCESS_TOKEN
+}else{
+message.innerHTML="❌ Invalid Code";
+message.style.color="#ff4d4d";
 }
-});
-
-const userData = await userRes.json();
-const userId = userData.data[0].id;
-
-const streamRes = await fetch(`https://api.twitch.tv/helix/streams?user_id=${userId}`,{
-headers:{
-"Client-ID": CLIENT_ID,
-"Authorization": "Bearer " + ACCESS_TOKEN
 }
-});
 
-const streamData = await streamRes.json();
-
-const statusEl = document.getElementById("liveStatus");
-const viewerEl = document.getElementById("viewerCount");
-const btn = document.getElementById("twitchBtn");
-
-if(streamData.data.length > 0){
-
-const viewers = streamData.data[0].viewer_count;
-
+function lockVault(){
+document.getElementById("vaultLocked").style.display="block";
+document.getElementById("vaultContent").style.display="none";
+document.getElementById("vaultCode").value="";
+document.getElementById("vaultMessage").innerHTML="";
 statusEl.innerHTML = "🟢 LIVE RIGHT NOW";
 viewerEl.innerHTML = `👥 ${viewers} watching`;
 
