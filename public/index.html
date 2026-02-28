@@ -1,231 +1,224 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>ZEITERSTRATS</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
 
-body {
+<title>ZEITERSTRATS | GTA Strategy & Performance Optimization</title>
+
+<meta name="description" content="ZEITERSTRATS delivers high-level GTA strategy, money optimization, efficiency breakdowns, and live performance-driven gameplay.">
+<meta name="keywords" content="GTA strategy, GTA money guide, GTA optimization, Twitch GTA streamer">
+<meta name="author" content="ZEITERSTRATS">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<style>
+html{scroll-behavior:smooth;}
+
+body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
-  background:#050810;
-  color:white;
+  background:#0a0a0f;
+  color:#e6ffff;
   text-align:center;
-  transition:0.4s ease;
+  overflow-x:hidden;
 }
 
-body.operation {
-  background:#000;
+#bgCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
 }
 
-header {
+header{
   padding:100px 20px 60px;
 }
 
-h1 {
-  font-size:70px;
-  font-weight:900;
+h1{
+  font-size:64px;
   letter-spacing:6px;
-  cursor:pointer;
-  background:linear-gradient(90deg,#00e5ff,#7a5cff,#ff007f);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  color:#00f7ff;
+  text-shadow:0 0 25px #00f7ff;
 }
 
-.glow { text-shadow:0 0 25px #ff007f; }
-.gold { color:gold; -webkit-text-fill-color:gold; }
-.pulse { animation:pulse 1s infinite; }
+.sub{opacity:0.7;}
 
-@keyframes pulse {
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
-}
-
-.toggle {
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#111;
-  padding:10px 18px;
-  border-radius:20px;
-  cursor:pointer;
-  border:1px solid #333;
-}
-
-.btn {
-  display:inline-block;
-  margin:12px;
-  padding:12px 25px;
-  border-radius:8px;
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(90deg,#7a5cff,#00e5ff);
-  transition:0.3s ease;
-}
-
-.btn.live {
-  background:red;
-  box-shadow:0 0 20px red;
-}
-
-.donate-btn {
-  animation:glowPulse 2s infinite;
-}
-
-@keyframes glowPulse {
-  0%{box-shadow:0 0 10px #00e5ff;}
-  50%{box-shadow:0 0 25px #ff007f;}
-  100%{box-shadow:0 0 10px #00e5ff;}
-}
-
-section {
+.section{
   padding:80px 20px;
+  max-width:1100px;
+  margin:auto;
 }
 
-.meter,.upgrade-bar,.rank-bar {
-  width:60%;
-  height:20px;
-  margin:15px auto;
-  background:#222;
-  border-radius:20px;
+.panel{
+  backdrop-filter:blur(14px);
+  background:rgba(20,20,30,0.55);
+  border:1px solid rgba(0,247,255,0.25);
+  padding:35px;
+  margin:30px 0;
+  border-radius:16px;
+  transition:0.3s;
+}
+
+.panel:hover{transform:translateY(-6px);}
+
+.btn{
+  display:inline-block;
+  margin:15px;
+  padding:14px 32px;
+  border-radius:8px;
+  border:1px solid #00f7ff;
+  color:#00f7ff;
+  text-decoration:none;
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#00f7ff;
+  color:black;
+}
+
+.live-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  background:red;
+  display:inline-block;
+  margin-right:8px;
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+  0%{opacity:1}
+  50%{opacity:0.3}
+  100%{opacity:1}
+}
+
+.bar{
+  width:70%;
+  height:16px;
+  background:#111;
+  margin:20px auto;
+  border-radius:12px;
   overflow:hidden;
 }
 
-.meter-fill,.upgrade-fill,.rank-fill {
+.fill{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#00e5ff,#7a5cff);
-  transition:width 1s ease;
+  background:linear-gradient(90deg,#00f7ff,#7a5cff);
+  transition:1s ease;
 }
 
-.cards {
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:20px;
+input{
+  padding:12px;
+  width:260px;
+  border-radius:6px;
+  border:none;
+  margin:10px;
 }
 
-.card {
-  background:#111;
-  padding:20px;
-  width:200px;
-  border-radius:10px;
-  cursor:pointer;
-  border:1px solid #333;
-  transition:0.3s ease;
+footer{
+  padding:60px;
+  opacity:0.4;
+  font-size:14px;
 }
-
-.card:hover { transform:translateY(-5px); }
-
-.selected { border:1px solid #00e5ff; }
-
-.supporter-card {
-  background:#111;
-  padding:15px;
-  width:250px;
-  margin:10px auto;
-  border-radius:8px;
-  border:1px solid gold;
-  color:gold;
-}
-
-#leaderboard div {
-  margin:5px 0;
-}
-
-.vault-door {
-  margin-top:30px;
-  padding:20px;
-  border:2px dashed #555;
-  cursor:pointer;
-  transition:0.3s ease;
-}
-
-.vault-door.open {
-  background:linear-gradient(90deg,#7a5cff,#00e5ff);
-  border:2px solid #00e5ff;
-}
-
-footer {
-  padding:40px;
-  opacity:0.5;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="toggle" onclick="toggleMode()">Switch Mode</div>
+<canvas id="bgCanvas"></canvas>
 
 <header>
-<h1 id="logo" onclick="logoEffect()">ZEITERSTRATS</h1>
+<h1>ZEITERSTRATS</h1>
+<div class="sub">High-Level GTA Strategy & Performance</div>
 
-<div id="liveStatus">Checking status...</div>
+<div id="liveStatus">Checking live status...</div>
 <div id="streamTitle"></div>
 <div id="viewerCount"></div>
 
-<div class="meter"><div id="heatFill" class="meter-fill"></div></div>
+<div class="bar"><div id="heatFill" class="fill"></div></div>
 
-<a id="liveBtn" href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
-Enter Live Operation
+<a href="https://twitch.tv/zeiterstrats"
+   target="_blank"
+   class="btn"
+   onclick="trackLiveClick()">
+Watch Live on Twitch
 </a>
 </header>
 
-<section>
-<h2>ZEITERSTRATS RANK: 14</h2>
-<div class="rank-bar"><div id="rankFill" class="rank-fill" style="width:45%"></div></div>
-</section>
+<div class="section">
 
-<section>
-<h2>Last Operation Results</h2>
-✔ $4.2M Earned<br>
-✔ 3 Heists Completed<br>
-✔ Rank +2
-</section>
-
-<section>
-<h2>Choose Your Role</h2>
-<div class="cards">
-<div class="card" onclick="selectRole(this)">Solo Grinder</div>
-<div class="card" onclick="selectRole(this)">Heist Specialist</div>
-<div class="card" onclick="selectRole(this)">Market Analyst</div>
-<div class="card" onclick="selectRole(this)">Casual Operator</div>
+<div class="panel">
+<h2>Performance Overview</h2>
+<div>Total GTA Earnings: $<span id="earnings">0</span></div>
+<div>Average Session Profit: $2.1M</div>
+<div>Efficiency Rating: 94%</div>
+<div>Current Rank: 15</div>
 </div>
-</section>
 
-<section>
-<h2>Support The Operation</h2>
+<div class="panel">
+<h2>About ZEITERSTRATS</h2>
+<p style="max-width:700px;margin:auto;opacity:0.9;">
+ZEITERSTRATS focuses on maximizing GTA results through structured strategy,
+data-driven decisions, and performance optimization. Every stream is built
+around measurable growth and smarter gameplay.
+</p>
+</div>
 
-<a href="YOUR_DONATION_LINK_HERE" target="_blank"
-class="btn donate-btn" onclick="vaultEffect()">
-💰 Contribute To The Mission
+<div class="panel">
+<h2>Support the Channel</h2>
+<p>
+If you enjoy the content and strategies, you can support future upgrades
+and higher production quality below.
+</p>
+
+<a href="YOUR_STRIPE_LINK_HERE"
+   target="_blank"
+   class="btn"
+   onclick="trackDonationClick()">
+Support ZEITERSTRATS
 </a>
 
-<div style="margin-top:40px;">
-<h3>Next Upgrade Objective</h3>
-<div class="upgrade-bar">
-<div class="upgrade-fill" id="upgradeFill"></div>
-</div>
-<p>$<span id="currentAmount">420</span> /
-$<span id="goalAmount">1000</span> Secured</p>
+<div class="bar">
+  <div id="upgradeFill" class="fill"></div>
 </div>
 
-<div style="margin-top:40px;">
-<h3>🏆 Supporter of the Week</h3>
-<div class="supporter-card" id="supporterOfWeek"></div>
+<div>$420 / $1000 Monthly Upgrade Goal</div>
 </div>
 
-<div style="margin-top:40px;">
-<h3>Top Tactical Supporters</h3>
-<div id="leaderboard"></div>
+<div class="panel">
+<h2>Get Stream Updates</h2>
+
+<form action="https://formspree.io/f/xgvzqkpo"
+      method="POST"
+      onsubmit="trackSubscribe()">
+<input type="email" name="email" placeholder="Enter your email" required>
+<br>
+<button class="btn">Subscribe for Updates</button>
+</form>
+
 </div>
 
-<div class="vault-door" id="vaultDoor">
-🔐 Secure Funding Vault
+<div class="panel">
+<h2>Media & Sponsorship</h2>
+<p>
+Monthly Viewers: Growing<br>
+Average Watch Time: High Engagement<br>
+Audience: 18–34 (Gaming Focused)<br><br>
+Business Contact: jz1213456789@outlook.com
+</p>
 </div>
-</section>
+
+</div>
 
 <footer>
 © 2026 ZEITERSTRATS
@@ -233,110 +226,88 @@ $<span id="goalAmount">1000</span> Secured</p>
 
 <script>
 
-// ===== IMMERSION =====
-function toggleMode(){
-  document.body.classList.toggle("operation");
+// Earnings Animation
+let earningsTarget = 318400000;
+let earningsCurrent = 0;
+function animateEarnings(){
+  if(earningsCurrent < earningsTarget){
+    earningsCurrent += 3000000;
+    document.getElementById("earnings").innerText =
+      earningsCurrent.toLocaleString();
+    requestAnimationFrame(animateEarnings);
+  }
 }
+animateEarnings();
 
-function logoEffect(){
-  const logo=document.getElementById("logo");
-  const effects=["glow","gold","pulse"];
-  logo.classList.remove("glow","gold","pulse");
-  const random=effects[Math.floor(Math.random()*effects.length)];
-  logo.classList.add(random);
-}
-
-function selectRole(card){
-  document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));
-  card.classList.add("selected");
-}
-
-// ===== LIVE SYSTEM =====
+// Live Status
 async function checkLive(){
   try{
-    const res=await fetch("/api/live-status");
-    const data=await res.json();
-
-    const status=document.getElementById("liveStatus");
-    const title=document.getElementById("streamTitle");
-    const viewers=document.getElementById("viewerCount");
-    const heat=document.getElementById("heatFill");
-    const btn=document.getElementById("liveBtn");
-
+    const res = await fetch("/api/live-status");
+    const data = await res.json();
     if(data.live){
-      status.innerHTML="🔴 LIVE NOW";
-      title.innerHTML="Stream: "+data.title;
-      viewers.innerHTML="Viewers: "+data.viewers;
-      btn.classList.add("live");
-      let intensity=Math.min(100,data.viewers*2);
-      heat.style.width=intensity+"%";
+      document.getElementById("liveStatus").innerHTML='<span class="live-dot"></span>Live Now';
+      document.getElementById("streamTitle").innerHTML=data.title;
+      document.getElementById("viewerCount").innerHTML="Viewers: "+data.viewers;
+      document.getElementById("heatFill").style.width=Math.min(100,data.viewers*2)+"%";
     }else{
-      status.innerHTML="⚫ Offline";
-      heat.style.width="0%";
-      btn.classList.remove("live");
+      document.getElementById("liveStatus").innerHTML="Currently Offline";
+      document.getElementById("heatFill").style.width="0%";
     }
   }catch{
     document.getElementById("liveStatus").innerHTML="Status unavailable";
   }
 }
-
 checkLive();
 setInterval(checkLive,60000);
 
-// ===== FUNDING SYSTEM =====
-let currentAmount=420;
-let goalAmount=1000;
-
-function updateProgress(){
-  const percent=(currentAmount/goalAmount)*100;
-  document.getElementById("upgradeFill").style.width=percent+"%";
+// Analytics Tracking
+function trackLiveClick(){
+  gtag('event','click_live_button');
+}
+function trackDonationClick(){
+  gtag('event','click_donation_button');
+}
+function trackSubscribe(){
+  gtag('event','email_subscribe');
 }
 
-updateProgress();
+// Particle Background
+const canvas=document.getElementById("bgCanvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-function animateMoneyIncrease(amount){
-  let target=currentAmount+amount;
-  let interval=setInterval(()=>{
-    if(currentAmount>=target){clearInterval(interval);}
-    else{
-      currentAmount+=5;
-      document.getElementById("currentAmount").innerText=currentAmount;
-      updateProgress();
-    }
-  },20);
-}
-
-const supporters=["Commander Alpha","Shadow Operator","Night Tactician","Ghost Unit"];
-document.getElementById("supporterOfWeek").innerText =
-supporters[Math.floor(Math.random()*supporters.length)];
-
-const leaderboardData=[
-{name:"Commander Alpha",amount:150},
-{name:"Shadow Operator",amount:120},
-{name:"Night Tactician",amount:75}
-];
-
-function renderLeaderboard(){
-  const board=document.getElementById("leaderboard");
-  leaderboardData.sort((a,b)=>b.amount-a.amount);
-  leaderboardData.forEach((entry,index)=>{
-    const div=document.createElement("div");
-    div.innerText=`#${index+1} ${entry.name} — $${entry.amount}`;
-    board.appendChild(div);
+let particles=[];
+for(let i=0;i<60;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    size:Math.random()*2,
+    speedY:Math.random()*0.5+0.2
   });
 }
 
-renderLeaderboard();
-
-function vaultEffect(){
-  const vault=document.getElementById("vaultDoor");
-  vault.classList.add("open");
-  vault.innerHTML="🔓 Vault Accessed — Reinforcements Incoming";
-  const sound=new Audio("https://assets.mixkit.co/sfx/preview/mixkit-safe-unlock-1120.mp3");
-  sound.play();
-  animateMoneyIncrease(50);
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="rgba(0,247,255,0.3)";
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+    p.y+=p.speedY;
+    if(p.y>canvas.height){
+      p.y=0;
+      p.x=Math.random()*canvas.width;
+    }
+  });
+  requestAnimationFrame(animateParticles);
 }
+animateParticles();
 
+window.addEventListener("resize",()=>{
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+});
 </script>
 
 </body>
