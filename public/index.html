@@ -59,93 +59,39 @@ margin:20px auto;
 max-width:600px;
 border-radius:12px;
 }
-
-.admin{
-position:fixed;
-bottom:10px;
-right:10px;
-background:#111;
-padding:10px;
-border-radius:8px;
-display:none;
-}
 </style>
 </head>
 
 <body>
 
 <div class="hero">
-<h1 id="logo">ZEITERSTRATS</h1>
+<h1>ZEITERSTRATS</h1>
 <div class="tagline">Strategy > Luck. Execution > Emotion.</div>
 
 <div id="liveStatus">Checking stream status...</div>
 <div id="viewerCount"></div>
 
 <button id="twitchBtn" class="cta offline">Loading...</button>
-<button class="cta" onclick="trackClick('youtube'); window.open('https://youtube.com/@ZEITERSTRATS')">Latest Video</button>
-</div>
-
-<div class="section">
-<div class="card">
-<h2>Why Watch ZEITERSTRATS?</h2>
-<p>Calm dominance. Tactical execution. No wasted movement.</p>
-</div>
-
-<div class="card">
-<h2>ZEITER Setup</h2>
-<p><a href="#" onclick="trackClick('affiliate')">🎧 Headset</a></p>
-<p><a href="#" onclick="trackClick('affiliate')">🎙 Mic</a></p>
-<p><a href="#" onclick="trackClick('affiliate')">🖱 Mouse</a></p>
-</div>
-
-<div class="card">
-<h2>Support the Growth</h2>
-<p>Stream upgrades. Bigger drops. Better content.</p>
-<button class="cta" onclick="trackClick('donation')">Support</button>
-</div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="admin" id="adminPanel">
-<h3>Admin</h3>
-<input id="nextStreamInput" placeholder="Next stream (e.g. Saturday 7PM EST)">
-<button onclick="saveSchedule()">Save</button>
+<button class="cta" onclick="window.open('https://youtube.com/@ZEITERSTRATS')">
+Latest Video
+</button>
 </div>
 
 <script>
 
-// ===== SETTINGS =====
-const CLIENT_ID = "YOUR_TWITCH_CLIENT_ID";
-const ACCESS_TOKEN = "YOUR_TWITCH_ACCESS_TOKEN";
-const CHANNEL_NAME = "zeiterstrats"; // your twitch username
-
-// ===== ADMIN TOGGLE (press ` key) =====
-document.addEventListener("keydown", e=>{
-if(e.key==="`"){
-document.getElementById("adminPanel").style.display="block";
-}
-});
-
-// ===== SAVE SCHEDULE =====
-function saveSchedule(){
-const val = document.getElementById("nextStreamInput").value;
-localStorage.setItem("nextStream", val);
-alert("Saved.");
-}
-
-// ===== TRACK CLICKS =====
-function trackClick(type){
-let logs = JSON.parse(localStorage.getItem("clickLogs") || "[]");
-logs.push({type, time: new Date().toISOString()});
-localStorage.setItem("clickLogs", JSON.stringify(logs));
-}
+// ===== TWITCH CONFIG =====
+const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm";
+const ACCESS_TOKEN = "PASTE_YOUR_ACCESS_TOKEN_HERE";
+const CHANNEL_NAME = "ZeiterStrats";
 
 // ===== TWITCH LIVE CHECK =====
 async function checkLive(){
 
 try{
 
-const userRes = await fetch(`https://api.twitch.tv/helix/users?login=${CHANNEL_NAME}`,{
+// Get user ID
+const userRes = await fetch(
+`https://api.twitch.tv/helix/users?login=${CHANNEL_NAME}`,{
 headers:{
 "Client-ID": CLIENT_ID,
 "Authorization": "Bearer " + ACCESS_TOKEN
@@ -153,9 +99,17 @@ headers:{
 });
 
 const userData = await userRes.json();
+
+if(!userData.data || userData.data.length === 0){
+document.getElementById("liveStatus").innerText="Channel not found.";
+return;
+}
+
 const userId = userData.data[0].id;
 
-const streamRes = await fetch(`https://api.twitch.tv/helix/streams?user_id=${userId}`,{
+// Check stream status
+const streamRes = await fetch(
+`https://api.twitch.tv/helix/streams?user_id=${userId}`,{
 headers:{
 "Client-ID": CLIENT_ID,
 "Authorization": "Bearer " + ACCESS_TOKEN
@@ -179,34 +133,31 @@ btn.innerText = "🔥 WATCH LIVE";
 btn.classList.remove("offline");
 btn.classList.add("live");
 btn.onclick = ()=>{
-trackClick('twitch');
 window.open("https://twitch.tv/"+CHANNEL_NAME);
 };
 
 }else{
 
 statusEl.innerHTML = "🔴 Offline";
-viewerEl.innerHTML = localStorage.getItem("nextStream") 
-? "Next Stream: " + localStorage.getItem("nextStream")
-: "";
+viewerEl.innerHTML = "";
 
 btn.innerText = "Follow on Twitch";
 btn.classList.remove("live");
 btn.classList.add("offline");
 btn.onclick = ()=>{
-trackClick('twitch');
 window.open("https://twitch.tv/"+CHANNEL_NAME);
 };
 
 }
 
-}catch(e){
-document.getElementById("liveStatus").innerHTML="Stream status unavailable.";
+}catch(error){
+document.getElementById("liveStatus").innerText="Stream status unavailable.";
+console.error(error);
 }
 
 }
 
-// CHECK EVERY 60 SECONDS
+// Check every 60 seconds
 checkLive();
 setInterval(checkLive,60000);
 
