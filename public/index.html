@@ -14,6 +14,7 @@
       overflow-x: hidden;
     }
 
+    /* Animated Grid Background */
     body::before {
       content: "";
       position: fixed;
@@ -46,19 +47,61 @@
       padding: 100px 20px 60px;
     }
 
-    h1 {
-      font-size: 64px;
+    /* BRAND TITLE */
+    #brand {
+      font-size: 76px;
+      font-weight: 900;
       letter-spacing: 4px;
+      cursor: pointer;
+      user-select: none;
       background: linear-gradient(90deg,#00ffe0,#7a5cff,#ff00c8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
+      transition: all 0.4s ease;
+    }
+
+    /* Effects */
+    .effect1 {
+      text-shadow:
+        0 0 10px #00ffe0,
+        0 0 20px #00ffe0,
+        0 0 40px #00ffe0;
+    }
+
+    .effect2 {
+      animation: glitch 0.3s linear 3;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(2px, -2px); }
+      25% { transform: translate(-2px, 2px); }
+      50% { transform: translate(2px, 2px); }
+      75% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    .effect3 {
+      background: linear-gradient(90deg,#ffffff,#aaaaaa,#ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .effect4 {
+      color: #ffffff;
+      text-shadow:
+        0 0 5px #7a5cff,
+        0 0 15px #7a5cff,
+        0 0 30px #ff00c8;
+    }
+
+    .effect5 {
+      transform: scale(1.1);
     }
 
     .tagline {
       font-size: 20px;
       opacity: 0.8;
-      margin-bottom: 30px;
+      margin: 20px 0 30px;
     }
 
     .btn {
@@ -80,8 +123,16 @@
 
     section {
       padding: 80px 20px;
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     h2 {
@@ -114,6 +165,14 @@
       font-size: 18px;
     }
 
+    input {
+      padding: 12px;
+      width: 250px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+    }
+
     footer {
       padding: 50px 20px;
       opacity: 0.6;
@@ -121,21 +180,23 @@
     }
 
     @media(max-width:768px){
-      h1 { font-size: 42px; }
+      #brand { font-size: 46px; }
       .pillars { flex-direction: column; align-items: center; }
     }
+
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1>ZEITERSTRATS</h1>
+  <h1 id="brand">ZEITERSTRATS</h1>
+
   <div class="tagline">
     Strategic Intelligence. Competitive Precision. Elite Execution.
   </div>
 
-  <a href="https://twitch.tv/YOUR_TWITCH_NAME" target="_blank" class="btn">
+  <a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
     Watch Live on Twitch
   </a>
 </header>
@@ -143,56 +204,59 @@
 <section>
   <h2>The Mission</h2>
   <p>
-    ZEITERSTRATS is built around one principle:
-    calculated dominance through strategy.
+    ZEITERSTRATS is built around calculated dominance through discipline,
+    pattern recognition, and real-time tactical execution.
   </p>
   <p>
-    This isn’t chaos gameplay. This is discipline, pattern recognition,
-    real-time decision analysis, and elite execution under pressure.
+    Strategy-first gameplay. No chaos. Only precision.
   </p>
 </section>
 
 <section>
   <h2>Why Watch ZEITERSTRATS?</h2>
-
   <div class="pillars">
-
     <div class="pillar">
       <h3>🎯 Strategic Breakdown</h3>
-      <p>Every move has purpose. Learn the logic behind elite-level decisions.</p>
+      <p>Understand elite-level decisions.</p>
     </div>
-
     <div class="pillar">
       <h3>🧠 High IQ Gameplay</h3>
-      <p>Pattern recognition, prediction, and calculated risk management.</p>
+      <p>Calculated risk management.</p>
     </div>
-
     <div class="pillar">
       <h3>🔍 Real-Time Analysis</h3>
-      <p>Understand the “why” behind each play — not just the outcome.</p>
+      <p>Learn the “why” behind every play.</p>
     </div>
-
-  </div>
-</section>
-
-<section>
-  <h2>Stream Schedule</h2>
-  <p>Weekdays: 6:00 PM (EST)</p>
-  <p>Weekends: Rotating Times</p>
-</section>
-
-<section>
-  <h2>Connect</h2>
-  <div class="socials">
-    <a href="https://instagram.com/iron_grip216" target="_blank">Instagram</a>
-    <a href="https://youtube.com/@ZeiterStrats" target="_blank">YouTube</a>
-    <a href="https://tiktok.com/@josh222h00" target="_blank">TikTok</a>
   </div>
 </section>
 
 <footer>
   © 2026 ZEITERSTRATS — Strategic Authority
 </footer>
+
+<script>
+  const brand = document.getElementById("brand");
+  let clickCount = 0;
+  const effects = ["effect1","effect2","effect3","effect4","effect5"];
+
+  brand.addEventListener("click", () => {
+    brand.classList.remove(...effects);
+    const effect = effects[clickCount % effects.length];
+    brand.classList.add(effect);
+    clickCount++;
+  });
+
+  const sections = document.querySelectorAll("section");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  });
+
+  sections.forEach(section => observer.observe(section));
+</script>
 
 </body>
 </html>
