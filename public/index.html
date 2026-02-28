@@ -9,7 +9,7 @@
 
 <style>
 
-/* ===== CORE ===== */
+/* ================= CORE ================= */
 
 body{
 margin:0;
@@ -32,7 +32,6 @@ animation:pulseGlow 6s ease-in-out infinite;
 
 .layer{
 padding:100px 20px;
-position:relative;
 }
 
 .layer-dark{background:#070b14;}
@@ -54,7 +53,7 @@ transition:0.4s;
 }
 
 .panel:hover{
-transform:translateY(-5px);
+transform:translateY(-6px);
 }
 
 .grid{
@@ -89,17 +88,6 @@ background:#7a5cff;
 color:#000;
 }
 
-.fade-in{
-opacity:0;
-transform:translateY(20px);
-transition:all 0.8s ease;
-}
-
-.fade-in.visible{
-opacity:1;
-transform:translateY(0);
-}
-
 .bar{
 width:80%;
 height:16px;
@@ -120,6 +108,15 @@ transition:width 1.5s ease;
 filter:blur(6px);
 pointer-events:none;
 opacity:0.6;
+}
+
+.founder-badge{
+display:inline-block;
+padding:6px 14px;
+background:linear-gradient(90deg,#7a5cff,#00f7ff);
+border-radius:20px;
+font-size:12px;
+margin-top:10px;
 }
 
 .hidden{display:none;}
@@ -146,19 +143,20 @@ opacity:0.6;
 
 <!-- HERO -->
 <section class="layer layer-dark">
-<div class="section-inner fade-in">
-<h1>ZEITERSTRATS</h1>
+<div class="section-inner">
+<h1 id="mainTitle">ZEITERSTRATS</h1>
 <p id="rotatingQuote"></p>
-<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live</a>
 </div>
 </section>
 
 <!-- PERFORMANCE -->
 <section class="layer layer-soft">
-<div class="section-inner fade-in">
+<div class="section-inner">
+
 <h2>Performance Overview</h2>
 
 <div class="grid">
+
 <div class="panel">
 <h3>Total Earnings</h3>
 <div>$<span id="earnings">0</span></div>
@@ -166,7 +164,7 @@ opacity:0.6;
 
 <div class="panel">
 <h3>Performance Tier</h3>
-<div id="tierName">Observer</div>
+<div id="tierName"></div>
 
 <div class="bar">
 <div id="tierFill" class="fill"></div>
@@ -174,13 +172,27 @@ opacity:0.6;
 
 <div id="tierProgressText"></div>
 </div>
+
+</div>
+</div>
+</section>
+
+<!-- FOUNDER SECTION -->
+<section class="layer layer-dark">
+<div class="section-inner">
+<h2>Founding Members</h2>
+
+<div class="panel">
+<p>Early supporters receive permanent Founder status.</p>
+<p id="founderCount"></p>
+<div id="founderBadgeArea"></div>
 </div>
 </div>
 </section>
 
 <!-- DASHBOARD -->
-<section class="layer layer-dark">
-<div class="section-inner fade-in">
+<section class="layer layer-soft">
+<div class="section-inner">
 <h2>Member Dashboard</h2>
 
 <div id="dashboardLocked">
@@ -190,24 +202,23 @@ opacity:0.6;
 <div id="dashboardUnlocked" class="hidden">
 
 <div class="panel">
-<h3>Welcome Back</h3>
+<h3>Welcome</h3>
 <p id="memberEmail"></p>
+<p id="engagementLevel"></p>
 </div>
 
 <div class="panel">
-<h3>Member Status</h3>
-<p id="memberTier"></p>
-</div>
+<h3>Pro Strategy Vault</h3>
 
-<div class="panel">
-<h3>Pro Vault</h3>
 <div id="vaultContent" class="blur-lock">
 <p>Advanced routing systems</p>
 <p>Execution frameworks</p>
 <p>Scaling models</p>
 </div>
+
 <br>
 <button class="btn-pro btn" onclick="unlockVault()">Unlock Pro</button>
+
 </div>
 
 </div>
@@ -224,19 +235,23 @@ opacity:0.6;
 </div>
 </section>
 
-<!-- STRIPE PRO (STRUCTURE READY) -->
-<section class="layer layer-glass">
-<div class="section-inner fade-in">
-<h2>Upgrade to Pro</h2>
+<!-- EARLY ACCESS -->
+<section class="layer layer-dark">
+<div class="section-inner">
+<h2>Early Access Drops</h2>
+
 <div class="panel">
-<p>Unlock full strategy systems.</p>
-<button class="btn-pro btn" onclick="startCheckout()">Upgrade with Stripe</button>
+<p>• Advanced Risk Model v1.2</p>
+<p>• Execution Heatmap Beta</p>
+<p>• Performance Tracking v2.0</p>
+<p style="opacity:0.6;">Pro + Founders get early access.</p>
 </div>
+
 </div>
 </section>
 
 <footer>
-© 2026 ZEITERSTRATS | Build v5 | Platform Mode
+© 2026 ZEITERSTRATS | Build v6 | Engineered Platform
 </footer>
 
 <script>
@@ -260,23 +275,8 @@ const quotes=[
 "Performance is engineered."
 ];
 
-function newQuote(){
-const r=Math.floor(Math.random()*quotes.length);
-document.getElementById("rotatingQuote").innerText=quotes[r];
-}
-newQuote();
-
-/* ===== SCROLL REVEAL ===== */
-
-const faders=document.querySelectorAll('.fade-in');
-const observer=new IntersectionObserver(entries=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-entry.target.classList.add('visible');
-}
-});
-});
-faders.forEach(el=>observer.observe(el));
+document.getElementById("rotatingQuote").innerText =
+quotes[Math.floor(Math.random()*quotes.length)];
 
 /* ===== TIER SYSTEM ===== */
 
@@ -285,10 +285,10 @@ visits++;
 localStorage.setItem("visits",visits);
 
 function calculateTier(){
-if(visits>50) return {name:"Elite",progress:100};
-if(visits>25) return {name:"Advanced",progress:75};
-if(visits>10) return {name:"Strategic",progress:50};
-return {name:"Observer",progress:20};
+if(visits>50)return{name:"Elite",progress:100};
+if(visits>25)return{name:"Advanced",progress:75};
+if(visits>10)return{name:"Strategic",progress:50};
+return{name:"Observer",progress:20};
 }
 
 const tier=calculateTier();
@@ -297,24 +297,64 @@ document.getElementById("tierFill").style.width=tier.progress+"%";
 document.getElementById("tierProgressText").innerText=
 tier.progress+"% to next tier";
 
+/* ===== FOUNDER SYSTEM ===== */
+
+let founderMax=50;
+let founderList=JSON.parse(localStorage.getItem("founders"))||[];
+document.getElementById("founderCount").innerText=
+"Spots Remaining: "+(founderMax-founderList.length);
+
+function checkFounder(email){
+if(founderList.includes(email)){
+document.getElementById("founderBadgeArea").innerHTML=
+'<div class="founder-badge">Founding Member</div>';
+document.getElementById("mainTitle").innerHTML=
+'ZEITERSTRATS <span style="color:#7a5cff;">★</span>';
+}
+}
+
+function registerFounder(email){
+if(founderList.length<founderMax && !founderList.includes(email)){
+founderList.push(email);
+localStorage.setItem("founders",JSON.stringify(founderList));
+}
+}
+
+/* ===== ENGAGEMENT ===== */
+
+let timeOnSite=0;
+setInterval(()=>{
+timeOnSite++;
+},1000);
+
+function getEngagement(){
+if(timeOnSite>300)return"Highly Engaged";
+if(timeOnSite>120)return"Active";
+return"New Visitor";
+}
+
 /* ===== AUTH ===== */
 
 async function register(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 const { error }=await supabase.auth.signUp({email,password});
-if(error) alert(error.message);
-else alert("Check email to confirm.");
+if(error)alert(error.message);
+else{
+registerFounder(email);
+alert("Check email to confirm.");
+}
 }
 
 async function login(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 const { data,error }=await supabase.auth.signInWithPassword({email,password});
-if(error) alert(error.message);
+if(error)alert(error.message);
 else{
 currentUser=data.user;
 unlockDashboard();
+checkFounder(currentUser.email);
 }
 }
 
@@ -322,7 +362,8 @@ function unlockDashboard(){
 document.getElementById("dashboardLocked").classList.add("hidden");
 document.getElementById("dashboardUnlocked").classList.remove("hidden");
 document.getElementById("memberEmail").innerText=currentUser.email;
-document.getElementById("memberTier").innerText="Community Member";
+document.getElementById("engagementLevel").innerText=
+"Engagement: "+getEngagement();
 }
 
 async function logout(){
@@ -340,13 +381,7 @@ alert("Login required.");
 }
 }
 
-/* ===== STRIPE PLACEHOLDER ===== */
-
-function startCheckout(){
-alert("Stripe checkout will connect here once backend is added.");
-}
-
-/* ===== EARNINGS ANIMATION ===== */
+/* ===== EARNINGS ===== */
 
 let target=318400000;
 let current=0;
