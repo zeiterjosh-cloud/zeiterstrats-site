@@ -75,41 +75,30 @@ h1{font-size:48px;color:#00f7ff;text-shadow:0 0 20px #00f7ff}
 
 <script>
 
+    <script>
 const supabase = window.supabase.createClient(
 "YOUR_SUPABASE_URL",
 "YOUR_ANON_KEY"
 );
 
-let user=null;
-let visits=localStorage.getItem("visits")||0;
-visits++;
-localStorage.setItem("visits",visits);
-
-function getRank(){
-if(visits>50)return"Inner Circle";
-if(visits>30)return"Elite";
-if(visits>15)return"Operator";
-if(visits>5)return"Strategist";
-return"Observer";
-}
+let currentUser = null;
 
 async function register(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
-const{error}=await supabase.auth.signUp({email,password});
-if(error)alert(error.message);
-else alert("Check email");
+const { error } = await supabase.auth.signUp({ email, password });
+if(error) alert(error.message);
+else alert("Check your email to confirm.");
 }
 
 async function login(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
-const{data,error}=await supabase.auth.signInWithPassword({email,password});
-if(error)alert(error.message);
+const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+if(error) alert(error.message);
 else{
-user=data.user;
-document.getElementById("memberStatus").innerText="Logged in";
-document.getElementById("dashBtn").classList.remove("hidden");
+currentUser=data.user;
+document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
 }
 }
 
@@ -118,50 +107,16 @@ await supabase.auth.signOut();
 location.reload();
 }
 
-async function check(){
-const{data}=await supabase.auth.getUser();
+async function checkSession(){
+const { data } = await supabase.auth.getUser();
 if(data.user){
-user=data.user;
-document.getElementById("memberStatus").innerText="Logged in";
-document.getElementById("dashBtn").classList.remove("hidden");
+currentUser=data.user;
+document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
 }
 }
-check();
 
-function unlockVault(){
-if(user)document.getElementById("vault").classList.remove("hidden");
-else alert("Login required");
-}
-
-function openDash(){
-document.getElementById("dashboard").classList.remove("hidden");
-document.getElementById("rank").innerText=getRank();
-document.getElementById("visits").innerText=visits;
-document.getElementById("loginStreak").innerText=1;
-}
-
-let target=318400000;
-let current=0;
-function animate(){
-if(current<target){
-current+=2500000;
-document.getElementById("earnings").innerText=current.toLocaleString();
-requestAnimationFrame(animate);
-}}
-animate();
-
-let last=new Date("2026-03-10");
-let now=new Date();
-let diff=Math.ceil(Math.abs(now-last)/(1000*60*60*24));
-document.getElementById("streak").innerText=diff;
-
-let raised=420;
-let goal=1000;
-let percent=(raised/goal)*100;
-document.getElementById("goalFill").style.width=percent+"%";
-document.getElementById("goalText").innerText="$"+raised+" / $"+goal;
-
+checkSession();
 </script>
-
-</body>
-</html>
+    
+    </body>
+    </html>
