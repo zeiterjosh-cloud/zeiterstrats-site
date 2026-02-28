@@ -1,43 +1,111 @@
-<script>
-const channel = "zeiterstrats";
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEITERSTRATS</title>
 
-async function checkLive() {
-  try {
-    const res = await fetch(`https://decapi.me/twitch/uptime/${channel}`);
-    const text = await res.text();
-
-    const statusEl = document.getElementById("liveStatus");
-    const btn = document.getElementById("twitchBtn");
-
-    if (!statusEl || !btn) return;
-
-    if (text.toLowerCase().includes("offline")) {
-      statusEl.innerHTML = "🔴 Offline";
-      btn.innerText = "Follow on Twitch";
-      btn.className = "cta offline";
-      btn.onclick = () => window.open("https://twitch.tv/" + channel);
-    } else {
-      statusEl.innerHTML = "🟢 LIVE NOW";
-      btn.innerText = "🔥 Watch Live";
-      btn.className = "cta live";
-      btn.onclick = () => window.open("https://twitch.tv/" + channel);
-    }
-
-  } catch (err) {
-    console.log("API fallback");
-    document.getElementById("liveStatus").innerHTML = "Stream status unavailable.";
-  }
-}const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm"; const CLIENT_SECRET = "62t19tqfi57iuhzc6oxjfzilzg16hm"; const CHANNEL_NAME = "zeiterstrats"; } } 
-checkLive(); setInterval(checkLive,60000)
-
-checkLive();
-</script>
-const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm";
-const CLIENT_SECRET = "62t19tqfi57iuhzc6oxjfzilzg16hm"; 
-const CHANNEL_NAME = "zeiterstrats";
-}
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#070b14;
+color:#e6ffff;
+text-align:center;
 }
 
-checkLive();
-setInterval(checkLive,60000);
-</script>
+.hero{
+padding:80px 20px;
+}
+
+h1{
+font-size:52px;
+margin-bottom:10px;
+}
+
+.tagline{
+opacity:0.7;
+margin-bottom:30px;
+font-size:18px;
+}
+
+.button{
+padding:14px 28px;
+margin:10px;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+font-size:16px;
+}
+
+.primary{
+background:#00f7ff;
+color:#000;
+}
+
+.secondary{
+background:#222;
+color:#fff;
+}
+
+.section{
+padding:60px 20px;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px auto;
+max-width:900px;
+border-radius:12px;
+}
+
+iframe{
+border-radius:12px;
+width:100%;
+height:450px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<h1>ZEITERSTRATS</h1>
+<div class="tagline">Strategy > Luck. Execution > Emotion.</div>
+
+<button class="button primary" onclick="window.open('https://twitch.tv/zeiterstrats')">
+🔥 Watch on Twitch
+</button>
+
+<button class="button secondary" onclick="window.open('https://youtube.com/@ZEITERSTRATS')">
+Latest Video
+</button>
+</div>
+
+<div class="section">
+<h2>Live Stream</h2>
+<div class="card">
+<iframe
+src="https://player.twitch.tv/?channel=zeiterstrats&parent=zeiterstrats-site-1.onrender.com"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+
+<div class="section">
+<h2>About</h2>
+<div class="card">
+GTA Online Strategy 💰 Smart Buys. No Wasted Cash.<br><br>
+Money Methods & Rankings 🎯 Solo Grind Breakdown.<br><br>
+Xbox Series S 🔥 New Tips Every Weekend.
+</div>
+</div>
+
+<footer style="padding:40px; opacity:0.6;">
+© 2026 ZEITERSTRATS
+</footer>
+
+</body>
+</html>
