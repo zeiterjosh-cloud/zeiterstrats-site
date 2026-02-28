@@ -226,6 +226,77 @@ Business Contact: jz1213456789@outlook.com
 
 <script>
 
+const supabase = window.supabase.createClient(
+  "https://jklcxvrwqyxkfpmpkwbv.supabase.com",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNDk4NTQsImV4cCI6MjA4NzgyNTg1NH0.swm1GeFu9iCzi_2XeskrESgz2rR2bVJlA7P3g0XVPyM"
+);
+
+let currentUser = null;
+
+// REGISTER
+async function register() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Registration successful. Check your email.");
+  }
+}
+
+// LOGIN
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    currentUser = data.user;
+    document.getElementById("memberStatus").innerText =
+      "Logged in as " + currentUser.email;
+  }
+}
+
+// CHECK SESSION ON LOAD
+async function checkSession() {
+  const { data } = await supabase.auth.getUser();
+  if (data.user) {
+    currentUser = data.user;
+    document.getElementById("memberStatus").innerText =
+      "Logged in as " + currentUser.email;
+  }
+}
+checkSession();
+
+// LOGOUT
+async function logout() {
+  await supabase.auth.signOut();
+  location.reload();
+}
+
+// VAULT ACCESS
+function unlockVault() {
+  if (currentUser) {
+    document.getElementById("vaultContent").classList.remove("hidden");
+  } else {
+    alert("Login required.");
+  }
+}
+
+</script>
+
 // Earnings Animation
 let earningsTarget = 318400000;
 let earningsCurrent = 0;
