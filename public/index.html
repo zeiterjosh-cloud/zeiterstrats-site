@@ -153,7 +153,126 @@ Watch Live
 © 2026 ZEITERSTRATS
 </footer>
 
-<script>
+<<script>
+
+// === SUPABASE (unchanged) ===
+const supabase = window.supabase.createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_ANON_KEY"
+);
+
+let currentUser = null;
+let visitCount = localStorage.getItem("visits") || 0;
+visitCount++;
+localStorage.setItem("visits", visitCount);
+
+// === RANK SYSTEM ===
+function updateRank(){
+  let rank = "Observer";
+  if(visitCount > 5) rank = "Strategist";
+  if(visitCount > 15) rank = "Operator";
+  if(visitCount > 30) rank = "Elite";
+  if(visitCount > 50) rank = "Inner Circle";
+
+  document.getElementById("memberStatus").innerText += 
+    " | Rank: " + rank;
+}
+
+// === REGISTER ===
+async function register(){
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  const { error }=await supabase.auth.signUp({email,password});
+  if(error) alert(error.message);
+  else alert("Check your email.");
+}
+
+// === LOGIN ===
+async function login(){
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  const { data,error }=
+    await supabase.auth.signInWithPassword({email,password});
+  if(error) alert(error.message);
+  else{
+    currentUser=data.user;
+    document.getElementById("memberStatus").innerText=
+    "Logged in as "+currentUser.email;
+    updateRank();
+  }
+}
+
+// === SESSION CHECK ===
+async function checkSession(){
+  const { data }=await supabase.auth.getUser();
+  if(data.user){
+    currentUser=data.user;
+    document.getElementById("memberStatus").innerText=
+    "Logged in as "+currentUser.email;
+    updateRank();
+  }
+}
+checkSession();
+
+// === VAULT LOCK ===
+function unlockVault(){
+  if(currentUser)
+    document.getElementById("vaultContent")
+      .classList.remove("hidden");
+  else alert("Login required.");
+}
+
+// === SESSION ROI ENGINE ===
+let sessionMinutes = 0;
+let earningsPerHour = 2800000;
+
+setInterval(()=>{
+  sessionMinutes++;
+  let projected =
+    (earningsPerHour/60)*sessionMinutes;
+  document.getElementById("roiEngine").innerText =
+    "Session: "+sessionMinutes+"m | Projected: $"+
+    Math.floor(projected).toLocaleString();
+},60000);
+
+// === SOCIAL PROOF ROTATOR ===
+const proofMessages=[
+"3 Operators unlocked vault today",
+"5 Strategists upgraded this week",
+"12 Observers joined"
+];
+let proofIndex=0;
+setInterval(()=>{
+  document.getElementById("socialProof").innerText=
+  proofMessages[proofIndex];
+  proofIndex=(proofIndex+1)%proofMessages.length;
+},4000);
+
+// === COUNTDOWN ===
+function startCountdown(){
+  const target=new Date("March 15, 2026 20:00:00");
+  setInterval(()=>{
+    const now=new Date();
+    const diff=target-now;
+    const hours=Math.floor(diff/1000/60/60);
+    document.getElementById("countdown").innerText=
+      "Next Stream In: "+hours+"h";
+  },1000);
+}
+startCountdown();
+
+// === OPERATOR MODE SECRET ===
+document.addEventListener("keydown",function(e){
+  if(e.key==="o"){
+    let code=prompt("Enter command:");
+    if(code==="optimize"){
+      document.body.style.background="#050509";
+      document.body.style.color="#7a5cff";
+    }
+  }
+});
+
+</script>
 
 // SUPABASE CONNECT
 const supabase = window.supabase.createClient(
