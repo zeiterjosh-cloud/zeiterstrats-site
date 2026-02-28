@@ -5,13 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZEITERSTRATS</title>
 
-<!-- LAYER 1 — EXTERNAL LIBRARIES -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- LAYER 2 — STYLE SYSTEM -->
 <style>
 
-/* CORE */
+/* ===== CORE STYLE SYSTEM ===== */
+
 body{
 margin:0;
 font-family:Arial, sans-serif;
@@ -20,33 +19,45 @@ color:#e6ffff;
 text-align:center;
 }
 
-h1{
-font-size:52px;
-color:#00f7ff;
-text-shadow:0 0 25px #00f7ff;
+.section{
+max-width:1100px;
+margin:auto;
+padding:80px 20px;
 }
 
-.section{
-max-width:1000px;
-margin:auto;
-padding:60px 20px;
+h1{
+font-size:56px;
+margin-bottom:10px;
+color:#00f7ff;
+text-shadow:0 0 20px rgba(0,247,255,0.6);
+}
+
+h2{
+margin-bottom:20px;
+font-weight:600;
+}
+
+p{
+opacity:0.85;
 }
 
 .panel{
 background:rgba(15,20,30,0.7);
-border:1px solid #00f7ff;
-padding:30px;
-margin:25px 0;
-border-radius:14px;
+backdrop-filter:blur(6px);
+padding:35px;
+margin:30px 0;
+border-radius:16px;
 }
 
 .btn{
-padding:10px 20px;
+padding:12px 22px;
 border:1px solid #00f7ff;
 background:none;
 color:#00f7ff;
 cursor:pointer;
-margin:5px;
+margin:8px;
+border-radius:8px;
+transition:0.3s;
 }
 
 .btn:hover{
@@ -54,7 +65,13 @@ background:#00f7ff;
 color:#000;
 }
 
-.hidden{display:none}
+.hidden{display:none;}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
 
 .bar{
 width:70%;
@@ -72,11 +89,25 @@ background:linear-gradient(90deg,#00f7ff,#7a5cff);
 }
 
 input{
-padding:8px;
+padding:10px;
 margin:6px;
 background:#111;
 border:1px solid #00f7ff;
 color:#fff;
+border-radius:6px;
+}
+
+/* subtle divider */
+.divider{
+height:1px;
+background:rgba(255,255,255,0.08);
+margin:60px 0;
+}
+
+footer{
+padding:40px 20px;
+opacity:0.6;
+font-size:14px;
 }
 
 </style>
@@ -84,69 +115,132 @@ color:#fff;
 
 <body>
 
-<!-- LAYER 3 — HERO -->
-<header class="section">
+<!-- ===== HERO ===== -->
+
+<section class="section">
 <h1>ZEITERSTRATS</h1>
-<p>Strategic Intelligence. Competitive Precision.</p>
-<div id="liveStatus">Offline</div>
+<p>Precision. Performance. Progress.</p>
+
+<div id="liveStatus">Status: Offline</div>
+<div id="countdown"></div>
+
+<br>
+
 <a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live</a>
-</header>
+<button class="btn" onclick="scrollToVault()">Join Pro Access</button>
+</section>
 
-<div class="section">
+<div class="divider"></div>
 
-<!-- LAYER 4 — PERFORMANCE PANEL -->
+<!-- ===== PERFORMANCE OVERVIEW ===== -->
+
+<section class="section">
+<h2>Performance Overview</h2>
+
+<div class="grid">
 <div class="panel">
-<h2>Operations Overview</h2>
-<div>Total Earnings: $<span id="earnings">0</span></div>
-<div>Stream Streak: <span id="streak">0</span> days</div>
+<h3>Total Earnings</h3>
+<div>$<span id="earnings">0</span></div>
 </div>
 
-<!-- LAYER 5 — AUTH SYSTEM -->
 <div class="panel">
+<h3>Stream Streak</h3>
+<div><span id="streak">0</span> Days</div>
+</div>
+
+<div class="panel">
+<h3>Performance Tier</h3>
+<div id="tier">Observer</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== STRATEGY SPOTLIGHT ===== -->
+
+<section class="section">
+<h2>Strategy Spotlight</h2>
+
+<div class="panel">
+<p><strong>This Week’s Focus:</strong></p>
+<p>• High-efficiency solo routing</p>
+<p>• Smart resource allocation</p>
+<p>• What to avoid in the current meta</p>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== MEMBER ACCESS ===== -->
+
+<section class="section">
 <h2>Member Access</h2>
+
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password"><br>
+
 <button class="btn" onclick="register()">Register</button>
 <button class="btn" onclick="login()">Login</button>
 <button class="btn" onclick="logout()">Logout</button>
+
 <div id="memberStatus"></div>
-<button class="btn hidden" id="dashBtn" onclick="openDash()">Open Dashboard</button>
-</div>
 
-<!-- LAYER 6 — VAULT -->
+<button id="dashboardBtn" class="btn hidden" onclick="openDashboard()">Open Dashboard</button>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== STRATEGY VAULT ===== -->
+
+<section class="section" id="vaultSection">
+<h2>Pro Strategy Vault</h2>
+
 <div class="panel">
-<h2>Optimization Vault</h2>
+<p>Advanced routing frameworks</p>
+<p>Optimization systems</p>
+<p>Scaling performance models</p>
+
 <button class="btn" onclick="unlockVault()">Access Vault</button>
-<div id="vault" class="hidden">
-<p>✔ Advanced Rotation Stack</p>
-<p>✔ Passive Income Sync</p>
-<p>✔ High Efficiency Route Planning</p>
-</div>
-</div>
 
-<!-- LAYER 7 — DASHBOARD -->
-<div class="panel hidden" id="dashboard">
-<h2>Operator Dashboard</h2>
-<div>Rank: <span id="rank"></span></div>
-<div>Visits: <span id="visits"></span></div>
-<div>Status: <span id="status"></span></div>
+<div id="vaultContent" class="hidden">
+<hr>
+<p>✔ Advanced Route Map</p>
+<p>✔ High ROI Play Pattern</p>
+<p>✔ Consistency Framework</p>
 </div>
+</div>
+</section>
 
-<!-- LAYER 8 — DONATION PROGRESS -->
-<div class="panel">
-<h2>Upgrade the Stream</h2>
+<div class="divider"></div>
+
+<!-- ===== SUPPORT SECTION ===== -->
+
+<section class="section">
+<h2>Support the Growth</h2>
+
 <div class="bar">
 <div id="goalFill" class="fill"></div>
 </div>
+
 <div id="goalText"></div>
-</div>
+</section>
 
-</div>
+<div class="divider"></div>
 
-<!-- LAYER 9 — APPLICATION LOGIC -->
+<!-- ===== FOOTER ===== -->
+
+<footer>
+© 2026 ZEITERSTRATS  
+<br>
+Status: Active | Build: v2
+</footer>
+
+<!-- ===== APPLICATION LOGIC ===== -->
+
 <script>
 
-/* SUPABASE CONNECT */
+/* ===== SUPABASE CONNECT ===== */
 const supabase = window.supabase.createClient(
 "YOUR_SUPABASE_URL",
 "YOUR_ANON_KEY"
@@ -154,38 +248,39 @@ const supabase = window.supabase.createClient(
 
 let currentUser = null;
 
-/* VISIT SYSTEM */
+/* ===== VISIT TIER SYSTEM ===== */
 let visits = localStorage.getItem("visits") || 0;
 visits++;
 localStorage.setItem("visits", visits);
 
-/* RANK SYSTEM */
-function getRank(){
-if(visits>50) return "Inner Circle";
-if(visits>30) return "Elite Operator";
-if(visits>15) return "Strategist";
-if(visits>5) return "Initiate";
+function getTier(){
+if(visits > 50) return "Elite";
+if(visits > 25) return "Advanced";
+if(visits > 10) return "Strategic";
 return "Observer";
 }
 
-/* AUTH */
+document.getElementById("tier").innerText = getTier();
+
+/* ===== AUTH ===== */
 async function register(){
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
 const { error } = await supabase.auth.signUp({ email, password });
 if(error) alert(error.message);
 else alert("Check your email to confirm.");
 }
 
 async function login(){
-const email=document.getElementById("email").value;
-const password=document.getElementById("password").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
 if(error) alert(error.message);
 else{
-currentUser=data.user;
-document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
-document.getElementById("dashBtn").classList.remove("hidden");
+currentUser = data.user;
+document.getElementById("memberStatus").innerText = "Logged in as " + currentUser.email;
+document.getElementById("dashboardBtn").classList.remove("hidden");
 }
 }
 
@@ -197,55 +292,80 @@ location.reload();
 async function checkSession(){
 const { data } = await supabase.auth.getUser();
 if(data.user){
-currentUser=data.user;
-document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
-document.getElementById("dashBtn").classList.remove("hidden");
+currentUser = data.user;
+document.getElementById("memberStatus").innerText = "Logged in as " + currentUser.email;
+document.getElementById("dashboardBtn").classList.remove("hidden");
 }
 }
 checkSession();
 
-/* VAULT LOCK */
+/* ===== VAULT LOCK ===== */
 function unlockVault(){
 if(currentUser){
-document.getElementById("vault").classList.remove("hidden");
+document.getElementById("vaultContent").classList.remove("hidden");
 }
 else{
-alert("Login required.");
+alert("Login required to access.");
 }
 }
 
-/* DASHBOARD */
-function openDash(){
-document.getElementById("dashboard").classList.remove("hidden");
-document.getElementById("rank").innerText=getRank();
-document.getElementById("visits").innerText=visits;
-document.getElementById("status").innerText="Active";
+/* ===== DASHBOARD ===== */
+function openDashboard(){
+alert("Dashboard expansion coming in v3.");
 }
 
-/* EARNINGS ANIMATION */
-let target=318400000;
-let current=0;
+/* ===== EARNINGS ANIMATION ===== */
+let target = 318400000;
+let current = 0;
 
 function animate(){
-if(current<target){
-current+=2500000;
-document.getElementById("earnings").innerText=current.toLocaleString();
+if(current < target){
+current += 3000000;
+document.getElementById("earnings").innerText = current.toLocaleString();
 requestAnimationFrame(animate);
-}}
+}
+}
 animate();
 
-/* STREAK CALCULATION */
-let last=new Date("2026-03-10");
-let now=new Date();
-let diff=Math.ceil(Math.abs(now-last)/(1000*60*60*24));
-document.getElementById("streak").innerText=diff;
+/* ===== STREAK CALC ===== */
+let lastStream = new Date("2026-03-10");
+let today = new Date();
+let diff = Math.ceil(Math.abs(today - lastStream) / (1000*60*60*24));
+document.getElementById("streak").innerText = diff;
 
-/* DONATION BAR */
-let raised=420;
-let goal=1000;
-let percent=(raised/goal)*100;
-document.getElementById("goalFill").style.width=percent+"%";
-document.getElementById("goalText").innerText="$"+raised+" / $"+goal;
+/* ===== GOAL BAR ===== */
+let raised = 420;
+let goal = 1000;
+let percent = (raised/goal)*100;
+document.getElementById("goalFill").style.width = percent + "%";
+document.getElementById("goalText").innerText = "$" + raised + " / $" + goal;
+
+/* ===== COUNTDOWN ===== */
+function updateCountdown(){
+let next = new Date("2026-03-16T19:00:00");
+let now = new Date();
+let diff = next - now;
+
+if(diff <= 0){
+document.getElementById("countdown").innerText = "Live Soon";
+return;
+}
+
+let hours = Math.floor(diff / (1000*60*60));
+let minutes = Math.floor((diff % (1000*60*60))/(1000*60));
+let seconds = Math.floor((diff % (1000*60))/1000);
+
+document.getElementById("countdown").innerText =
+"Next Stream In: " + hours + "h " + minutes + "m " + seconds + "s";
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* ===== SCROLL ===== */
+function scrollToVault(){
+document.getElementById("vaultSection").scrollIntoView({behavior:"smooth"});
+}
 
 </script>
 
