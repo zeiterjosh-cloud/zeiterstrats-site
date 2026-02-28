@@ -12,183 +12,276 @@ font-family:Arial, sans-serif;
 background:#070b14;
 color:#e6ffff;
 text-align:center;
+overflow-x:hidden;
 }
 
 .hero{
-padding:80px 20px;
+padding:100px 20px;
+background:linear-gradient(180deg,#070b14 0%,#0c111c 100%);
 }
 
 h1{
-font-size:48px;
+font-size:56px;
 margin-bottom:10px;
 }
 
 .tagline{
 opacity:0.7;
-margin-bottom:30px;
+margin-bottom:25px;
+font-size:18px;
 }
 
-.cta{
-padding:14px 24px;
+.button{
+padding:14px 28px;
 margin:10px;
 border:none;
 border-radius:8px;
 font-weight:bold;
 cursor:pointer;
+font-size:16px;
+transition:0.3s;
 }
 
-.live{
-background:#00ff88;
+.button:hover{
+transform:scale(1.05);
+}
+
+.primary{
+background:#00f7ff;
 color:#000;
-box-shadow:0 0 15px #00ff88;
 }
 
-.offline{
-background:#444;
+.secondary{
+background:#222;
 color:#fff;
 }
 
 .section{
-padding:60px 20px;
+padding:80px 20px;
 }
 
 .card{
 background:#111827;
-padding:20px;
-margin:20px auto;
-max-width:600px;
-border-radius:12px;
+padding:30px;
+margin:30px auto;
+max-width:900px;
+border-radius:14px;
+box-shadow:0 0 25px rgba(0,247,255,0.1);
 }
 
-.admin{
-position:fixed;
-bottom:10px;
-right:10px;
-background:#111;
-padding:10px;
+.stat{
+font-size:40px;
+font-weight:bold;
+color:#00f7ff;
+}
+
+footer{
+padding:40px;
+opacity:0.6;
+}
+
+iframe{
+border-radius:14px;
+width:100%;
+height:450px;
+}
+
+input{
+padding:12px;
 border-radius:8px;
-display:none;
+border:1px solid #00f7ff;
+background:#0c111c;
+color:#fff;
 }
 </style>
 </head>
 
 <body>
 
+<!-- HERO -->
 <div class="hero">
-<h1 id="logo">ZEITERSTRATS</h1>
+<h1>ZEITERSTRATS</h1>
 <div class="tagline">Strategy > Luck. Execution > Emotion.</div>
 
-<div id="liveStatus">Checking stream status...</div>
-<div id="viewerCount"></div>
+<button class="button primary" onclick="window.open('https://twitch.tv/zeiterstrats')">
+🔥 Watch on Twitch
+</button>
 
-<button id="twitchBtn" class="cta offline">Loading...</button>
-<button class="cta" onclick="trackClick('youtube'); window.open('https://youtube.com/@ZEITERSTRATS')">Latest Video</button>
+<button class="button secondary" onclick="window.open('https://youtube.com/@ZEITERSTRATS')">
+Latest Video
+</button>
+
+<div id="liveBadge" style="margin-top:25px;font-weight:bold;"></div>
 </div>
 
+<!-- LIVE STREAM -->
 <div class="section">
+<h2>Live Stream</h2>
 <div class="card">
-<h2>Why Watch ZEITERSTRATS?</h2>
-<p>Calm dominance. Tactical execution. No wasted movement.</p>
+<iframe
+src="https://player.twitch.tv/?channel=zeiterstrats&parent=zeiterstrats-site-1.onrender.com"
+allowfullscreen>
+</iframe>
+</div>
 </div>
 
+<!-- PERFORMANCE -->
+<div class="section">
+<h2>Performance Overview</h2>
 <div class="card">
-<h2>ZEITER Setup</h2>
-<p><a href="#" onclick="trackClick('affiliate')">🎧 Headset</a></p>
-<p><a href="#" onclick="trackClick('affiliate')">🎙 Mic</a></p>
-<p><a href="#" onclick="trackClick('affiliate')">🖱 Mouse</a></p>
+<div class="stat" id="views">0</div>
+Total Strategy Views<br><br>
+
+<div class="stat" id="tips">0</div>
+Money Methods Shared<br><br>
+
+<div class="stat" id="rankings">0</div>
+Rankings Analyzed
+</div>
 </div>
 
+<!-- DONATIONS -->
+<div class="section">
+<h2>Support The Grind</h2>
 <div class="card">
-<h2>Support the Growth</h2>
-<p>Stream upgrades. Bigger drops. Better content.</p>
-<button class="cta" onclick="trackClick('donation')">Support</button>
+If you’ve saved money using these strategies and want to support the grind —<br><br>
+
+<button class="button primary" onclick="window.open('https://paypal.me/YOURPAYPAL')">
+💰 Donate via PayPal
+</button>
+
+<button class="button secondary" onclick="window.open('https://cash.app/$YOURCASHAPP')">
+⚡ Donate via CashApp
+</button>
 </div>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="admin" id="adminPanel">
-<h3>Admin</h3>
-<input id="nextStreamInput" placeholder="Next stream (e.g. Saturday 7PM EST)">
-<button onclick="saveSchedule()">Save</button>
+<!-- VAULT -->
+<div class="section">
+<h2>ZEITER Vault</h2>
+<div class="card">
+
+<div id="vaultLocked">
+🔒 Enter Access Code to Unlock Premium Strategy
+<br><br>
+<input id="vaultCode" type="password" placeholder="Enter Access Code">
+<br><br>
+<button class="button primary" onclick="unlockVault()">Unlock Vault</button>
+<div id="vaultMessage" style="margin-top:15px;"></div>
 </div>
 
-<// ===== ULTIMATE VAULT SYSTEM =====
+<div id="vaultContent" style="display:none;margin-top:20px;"></div>
 
-const CODES = {
-basic: "ZEITER2026",
-elite: "EXECUTION",
-founder: "INNERSTRAT",
-easter: "STRATGOD"
+</div>
+</div>
+
+<!-- ABOUT -->
+<div class="section">
+<h2>About</h2>
+<div class="card">
+GTA Online Strategy 💰 Smart Buys. No Wasted Cash.<br><br>
+Money Methods & Rankings 🎯 Solo Grind Breakdown.<br><br>
+Xbox Series S 🔥 New Tips Every Weekend.
+</div>
+</div>
+
+<footer>
+© 2026 ZEITERSTRATS
+</footer>
+
+<script>
+// LIVE BADGE
+async function checkLive(){
+try{
+const res = await fetch("https://decapi.me/twitch/uptime/zeiterstrats");
+const text = await res.text();
+const badge = document.getElementById("liveBadge");
+if(text.toLowerCase().includes("offline")){
+badge.innerHTML="🔴 Currently Offline";
+badge.style.color="#ff4d4d";
+}else{
+badge.innerHTML="🟢 LIVE RIGHT NOW";
+badge.style.color="#00ff88";
+}
+}catch{}
+}
+checkLive();
+setInterval(checkLive,60000);
+
+// ANIMATED STATS
+function animateValue(id,end){
+let start=0;
+let increment=end/100;
+let obj=document.getElementById(id);
+let timer=setInterval(()=>{
+start+=increment;
+if(start>=end){
+start=end;
+clearInterval(timer);
+}
+obj.innerText=Math.floor(start).toLocaleString();
+},20);
+}
+animateValue("views",3184000);
+animateValue("tips",247);
+animateValue("rankings",86);
+
+// ===== ADVANCED VAULT =====
+const CODES={
+basic:"ZEITER2026",
+elite:"EXECUTION",
+founder:"INNERSTRAT",
+easter:"STRATGOD"
 };
 
 function getWeeklyCode(){
-const now = new Date();
-const week = Math.floor(now.getTime() / (1000*60*60*24*7));
-return "Z" + week;
+const now=new Date();
+const week=Math.floor(now.getTime()/(1000*60*60*24*7));
+return "Z"+week;
 }
 
 function unlockVault(){
-const input = document.getElementById("vaultCode").value.trim();
-const message = document.getElementById("vaultMessage");
+const input=document.getElementById("vaultCode").value.trim();
+const message=document.getElementById("vaultMessage");
+let tier=null;
 
-let tier = null;
-
-if(input === CODES.basic) tier = "Basic";
-if(input === CODES.elite) tier = "Elite";
-if(input === CODES.founder) tier = "Founder";
-if(input === CODES.easter) tier = "Easter";
-if(input === getWeeklyCode()) tier = "Weekly";
+if(input===CODES.basic) tier="Basic";
+if(input===CODES.elite) tier="Elite";
+if(input===CODES.founder) tier="Founder";
+if(input===CODES.easter) tier="Easter";
+if(input===getWeeklyCode()) tier="Weekly";
 
 if(tier){
-
-// Animated unlock flash
 document.body.style.transition="0.3s";
 document.body.style.background="#001f1f";
+setTimeout(()=>{document.body.style.background="#070b14";},300);
 
-setTimeout(()=>{
-document.body.style.background="#070b14";
-},300);
-
-document.getElementById("vaultLocked").style.display="none";
-document.getElementById("vaultContent").style.display="block";
-
-let content = `
-<h3>💎 ${tier} Vault Access Granted</h3>
-<ul style="text-align:left; max-width:600px; margin:0 auto;">
+let content=`<h3>💎 ${tier} Vault Access Granted</h3>
+<ul style="text-align:left;max-width:600px;margin:0 auto;">
 <li>🔥 Advanced Solo Routing</li>
 <li>📊 Profit Pattern Matrix</li>
 <li>🎯 Rank Acceleration Logic</li>
 <li>💰 Cash Optimization Cycles</li>
 <li>🧠 Strategic Buy Windows</li>
-</ul>
-<br>
-<button class="button secondary" onclick="lockVault()">
-Lock Vault
-</button>
-`;
+</ul><br>
+<button class="button secondary" onclick="lockVault()">Lock Vault</button>`;
 
-if(tier === "Easter"){
-content = `
-<h3>👑 STRATEGY GOD MODE UNLOCKED</h3>
-<p style="color:#00f7ff;font-weight:bold;">
-You found the hidden tier.
-</p>
-<ul style="text-align:left; max-width:600px; margin:0 auto;">
+if(tier==="Easter"){
+content=`<h3>👑 STRATEGY GOD MODE UNLOCKED</h3>
+<p style="color:#00f7ff;font-weight:bold;">You found the hidden tier.</p>
+<ul style="text-align:left;max-width:600px;margin:0 auto;">
 <li>🧠 Hidden Economic Exploit Mapping</li>
 <li>📈 Market Cycle Prediction Logic</li>
 <li>🔥 Stream Drop Multiplier Boost</li>
 <li>🎮 Elite Route Optimization Blueprint</li>
-</ul>
-<br>
-<button class="button secondary" onclick="lockVault()">
-Lock Vault
-</button>
-`;
+</ul><br>
+<button class="button secondary" onclick="lockVault()">Lock Vault</button>`;
 }
 
-document.getElementById("vaultContent").innerHTML = content;
+document.getElementById("vaultLocked").style.display="none";
+document.getElementById("vaultContent").style.display="block";
+document.getElementById("vaultContent").innerHTML=content;
 message.innerHTML="";
-
 }else{
 message.innerHTML="❌ Invalid Code";
 message.style.color="#ff4d4d";
@@ -200,44 +293,7 @@ document.getElementById("vaultLocked").style.display="block";
 document.getElementById("vaultContent").style.display="none";
 document.getElementById("vaultCode").value="";
 document.getElementById("vaultMessage").innerHTML="";
-statusEl.innerHTML = "🟢 LIVE RIGHT NOW";
-viewerEl.innerHTML = `👥 ${viewers} watching`;
-
-btn.innerText = "🔥 WATCH LIVE";
-btn.classList.remove("offline");
-btn.classList.add("live");
-btn.onclick = ()=>{
-trackClick('twitch');
-window.open("https://twitch.tv/"+CHANNEL_NAME);
-};
-
-}else{
-
-statusEl.innerHTML = "🔴 Offline";
-viewerEl.innerHTML = localStorage.getItem("nextStream") 
-? "Next Stream: " + localStorage.getItem("nextStream")
-: "";
-
-btn.innerText = "Follow on Twitch";
-btn.classList.remove("live");
-btn.classList.add("offline");
-btn.onclick = ()=>{
-trackClick('twitch');
-window.open("https://twitch.tv/"+CHANNEL_NAME);
-};
-
 }
-
-}catch(e){
-document.getElementById("liveStatus").innerHTML="Stream status unavailable.";
-}
-
-}
-
-// CHECK EVERY 60 SECONDS
-checkLive();
-setInterval(checkLive,60000);
-
 </script>
 
 </body>
