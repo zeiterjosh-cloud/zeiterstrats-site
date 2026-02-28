@@ -9,32 +9,33 @@
 
 <style>
 
-/* ================= CORE ================= */
-
 body{
 margin:0;
 font-family:Arial, sans-serif;
 background:#070b14;
 color:#e6ffff;
+overflow-x:hidden;
 }
 
-h1{
-font-size:56px;
-color:#00f7ff;
-animation:pulseGlow 6s ease-in-out infinite;
+h1{font-size:56px;color:#00f7ff;text-align:center;}
+h2{text-align:center;}
+
+.section{
+padding:100px 20px;
+text-align:center;
+transition:opacity 0.6s ease, transform 0.6s ease;
 }
 
-@keyframes pulseGlow{
-0%{text-shadow:0 0 20px rgba(0,247,255,0.5);}
-50%{text-shadow:0 0 40px rgba(0,247,255,0.9);}
-100%{text-shadow:0 0 20px rgba(0,247,255,0.5);}
+.dark{background:#070b14;}
+.soft{background:#0c111c;}
+
+.panel{
+background:#111827;
+padding:20px;
+margin:15px auto;
+border-radius:12px;
+max-width:800px;
 }
-
-.layer{padding:100px 20px;}
-.layer-dark{background:#070b14;}
-.layer-soft{background:#0c111c;}
-
-.section-inner{max-width:1000px;margin:auto;text-align:center;}
 
 button{
 padding:12px 18px;
@@ -56,14 +57,47 @@ color:#fff;
 border-radius:6px;
 }
 
-.panel{
-background:#111827;
-padding:20px;
-margin:15px 0;
-border-radius:10px;
+.hidden{
+opacity:0;
+pointer-events:none;
+transform:translateY(20px);
+position:absolute;
+width:100%;
 }
 
-.hidden{display:none;}
+.visible{
+opacity:1;
+pointer-events:auto;
+transform:translateY(0);
+position:relative;
+}
+
+.live-indicator{
+color:#ff3b3b;
+font-weight:bold;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{opacity:1;}
+50%{opacity:0.4;}
+100%{opacity:1;}
+}
+
+.progress-bar{
+width:100%;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.progress-fill{
+height:20px;
+width:0%;
+background:#7a5cff;
+transition:width 0.6s ease;
+}
 
 footer{
 padding:40px;
@@ -76,36 +110,23 @@ opacity:0.6;
 
 <body>
 
-<!-- HERO -->
-<section class="layer layer-dark">
-<div class="section-inner">
+<!-- LANDING PAGE -->
+<div id="landing" class="visible">
+
+<section class="section dark">
 <h1>ZEITERSTRATS</h1>
-<p id="rotatingQuote"></p>
-</div>
+<p id="liveStatus">Checking live status...</p>
+<button onclick="scrollToLogin()">Enter Platform</button>
 </section>
 
-<!-- PERFORMANCE -->
-<section class="layer layer-soft">
-<div class="section-inner">
+<section class="section soft">
 <h2>Performance Overview</h2>
-
 <div class="panel">
-<div>Earnings: $<span id="earnings">0</span></div>
-<div id="engagementLevel"></div>
-</div>
-
-<div class="panel" id="leaderboard">
-<h3>Leaderboard</h3>
-<div id="rankInfo"></div>
-</div>
-
+Earnings: $<span id="earnings">0</span>
 </div>
 </section>
 
-<!-- LOGIN PANEL -->
-<section class="layer layer-dark">
-<div class="section-inner">
-
+<section class="section dark" id="loginSection">
 <h2>Member Access</h2>
 
 <input id="email" placeholder="Email">
@@ -115,40 +136,72 @@ opacity:0.6;
 
 <button onclick="register()">Register</button>
 <button onclick="login()">Login</button>
-<button onclick="logout()">Logout</button>
 
 <p id="memberStatus"></p>
 
+</section>
+
+</div>
+
+<!-- DASHBOARD (Hidden until login) -->
+<div id="dashboard" class="hidden">
+
+<section class="section dark">
+<h1>Command Center</h1>
+<button onclick="logout()">Logout</button>
+</section>
+
+<section class="section soft">
+<h2>ZEITER Score</h2>
+<div class="panel">
+Score: <span id="score">0</span>
+<div class="progress-bar">
+<div id="xpBar" class="progress-fill"></div>
+</div>
 </div>
 </section>
 
-<!-- VAULT -->
-<section class="layer layer-soft">
-<div class="section-inner">
+<section class="section dark">
+<h2>Daily Streak</h2>
+<div class="panel">
+🔥 Streak: <span id="streak">1</span> days
+</div>
+</section>
+
+<section class="section soft">
 <h2>Strategy Vault</h2>
 <button onclick="unlockVault()">Unlock Vault</button>
-
-<div id="vaultContent" class="hidden panel">
-<p>Exclusive breakdowns. Private money methods. Advanced optimization routes.</p>
-</div>
-
+<div id="vaultContent" class="panel hidden">
+Elite optimization routes unlocked.
 </div>
 </section>
 
+<section class="section dark">
+<h2>Support the Platform</h2>
+<div class="panel">
+Goal: $<span id="goalAmount">1000</span>
+<div class="progress-bar">
+<div id="goalBar" class="progress-fill"></div>
+</div>
+</div>
+</section>
+
+</div>
+
 <footer>
-© 2026 ZEITERSTRATS | Engineered Platform
+© 2026 ZEITERSTRATS | Hybrid Engine v1
 </footer>
 
 <script>
 
-/* ================= SUPABASE INIT ================= */
+/* ================= SUPABASE ================= */
 
 const supabase = window.supabase.createClient(
 "https://YOUR_PROJECT_ID.supabase.co",
 "YOUR_PUBLIC_ANON_KEY"
 );
 
-let currentUser = null;
+let currentUser=null;
 
 /* ================= AUTH ================= */
 
@@ -157,7 +210,7 @@ const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 const { error }=await supabase.auth.signUp({email,password});
 if(error) alert(error.message);
-else alert("Check your email to confirm.");
+else alert("Check email to confirm.");
 }
 
 async function login(){
@@ -167,8 +220,7 @@ const { data,error }=await supabase.auth.signInWithPassword({email,password});
 if(error) alert(error.message);
 else{
 currentUser=data.user;
-document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
-checkAchievements();
+enterDashboard();
 }
 }
 
@@ -177,87 +229,60 @@ await supabase.auth.signOut();
 location.reload();
 }
 
-/* ================= VAULT ================= */
+/* ================= TRANSITION ================= */
 
-function unlockVault(){
-if(currentUser){
-document.getElementById("vaultContent").classList.remove("hidden");
-}else{
-alert("Login required.");
-}
+function enterDashboard(){
+document.getElementById("landing").classList.remove("visible");
+document.getElementById("landing").classList.add("hidden");
+document.getElementById("dashboard").classList.remove("hidden");
+document.getElementById("dashboard").classList.add("visible");
 }
 
-/* ================= EARNINGS ANIMATION ================= */
+/* ================= LIVE SIMULATION ================= */
+
+setTimeout(()=>{
+document.getElementById("liveStatus").innerHTML=
+'<span class="live-indicator">● LIVE NOW</span>';
+},1500);
+
+/* ================= EARNINGS ================= */
 
 let target=318400000;
 let current=0;
 
 function animate(){
 if(current<target){
-current+=3000000;
+current+=5000000;
 document.getElementById("earnings").innerText=current.toLocaleString();
 requestAnimationFrame(animate);
 }
 }
 animate();
 
-/* ================= ENGAGEMENT ================= */
+/* ================= XP SYSTEM ================= */
 
-function getEngagement(){
-let level=Math.floor(current/10000000);
-return level+" pts";
+let xp=420;
+let xpGoal=1000;
+
+document.getElementById("score").innerText=xp;
+document.getElementById("xpBar").style.width=(xp/xpGoal*100)+"%";
+
+/* ================= DONATION BAR ================= */
+
+let raised=350;
+let goal=1000;
+
+document.getElementById("goalBar").style.width=(raised/goal*100)+"%";
+
+/* ================= VAULT ================= */
+
+function unlockVault(){
+document.getElementById("vaultContent").classList.remove("hidden");
 }
 
-document.getElementById("engagementLevel").innerText=
-"Engagement: "+getEngagement();
-
-/* ================= ACHIEVEMENTS ================= */
-
-let user={achievements:[]};
-let achievementList=[
-{id:"firstLogin",name:"First Login"},
-{id:"vaultUnlock",name:"Vault Access"}
-];
-
-function checkAchievements(){
-if(currentUser && !user.achievements.includes("firstLogin")){
-user.achievements.push("firstLogin");
-showAchievementPopup("First Login Unlocked");
+function scrollToLogin(){
+document.getElementById("loginSection").scrollIntoView({behavior:"smooth"});
 }
-}
-
-function showAchievementPopup(text){
-let popup=document.createElement("div");
-popup.innerText="🏆 "+text;
-popup.style.position="fixed";
-popup.style.bottom="20px";
-popup.style.right="20px";
-popup.style.background="#111827";
-popup.style.padding="12px 18px";
-popup.style.borderRadius="8px";
-popup.style.boxShadow="0 0 20px rgba(122,92,255,0.6)";
-popup.style.opacity="0";
-popup.style.transition="all 0.4s ease";
-popup.style.zIndex="9999";
-document.body.appendChild(popup);
-setTimeout(()=>popup.style.opacity="1",50);
-setTimeout(()=>{
-popup.style.opacity="0";
-setTimeout(()=>popup.remove(),400);
-},3000);
-}
-
-/* ================= LEADERBOARD PERCENTILE ================= */
-
-function calculatePercentile(){
-let board=[{id:"localUser",score:current}];
-board.sort((a,b)=>b.score-a.score);
-let rank=board.findIndex(p=>p.id==="localUser")+1;
-return 100;
-}
-
-document.getElementById("rankInfo").innerText=
-"Rank Percentile: Top "+calculatePercentile()+"%";
 
 </script>
 
