@@ -9,9 +9,7 @@
 
 <style>
 
-/* ===============================
-   CORE SYSTEM
-================================ */
+/* ===== CORE ===== */
 
 body{
 margin:0;
@@ -22,23 +20,48 @@ color:#e6ffff;
 
 h1{
 font-size:56px;
-margin-bottom:10px;
 color:#00f7ff;
 animation:pulseGlow 6s ease-in-out infinite;
 }
 
 @keyframes pulseGlow{
 0%{text-shadow:0 0 20px rgba(0,247,255,0.5);}
-50%{text-shadow:0 0 35px rgba(0,247,255,0.9);}
+50%{text-shadow:0 0 40px rgba(0,247,255,0.9);}
 100%{text-shadow:0 0 20px rgba(0,247,255,0.5);}
 }
 
-h2{
-margin-bottom:30px;
-font-weight:600;
+.layer{
+padding:100px 20px;
+position:relative;
 }
 
-p{opacity:0.85;}
+.layer-dark{background:#070b14;}
+.layer-soft{background:#0c111c;}
+.layer-glass{background:linear-gradient(to bottom,#0c111c,#070b14);}
+
+.section-inner{
+max-width:1100px;
+margin:auto;
+text-align:center;
+}
+
+.panel{
+background:rgba(15,20,30,0.6);
+padding:30px;
+border-radius:16px;
+margin-bottom:20px;
+transition:0.4s;
+}
+
+.panel:hover{
+transform:translateY(-5px);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
 
 .btn{
 padding:12px 24px;
@@ -66,75 +89,6 @@ background:#7a5cff;
 color:#000;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-}
-
-.panel{
-background:rgba(15,20,30,0.6);
-padding:30px;
-border-radius:16px;
-transition:0.4s;
-}
-
-.panel:hover{
-transform:translateY(-5px);
-}
-
-/* ===============================
-   LAYER SYSTEM
-================================ */
-
-.layer{
-padding:100px 20px;
-position:relative;
-overflow:hidden;
-}
-
-.layer-dark{background:#070b14;}
-.layer-soft{background:#0c111c;}
-.layer-glass{background:linear-gradient(to bottom,#0c111c,#070b14);}
-
-.section-inner{
-max-width:1100px;
-margin:auto;
-text-align:center;
-}
-
-.layer-title{
-margin-bottom:50px;
-font-size:28px;
-letter-spacing:1px;
-opacity:0.9;
-}
-
-/* ===============================
-   HERO GRID BACKGROUND
-================================ */
-
-.hero-bg::before{
-content:"";
-position:absolute;
-width:200%;
-height:200%;
-background-image:
-linear-gradient(rgba(0,247,255,0.05) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,247,255,0.05) 1px, transparent 1px);
-background-size:60px 60px;
-animation:moveGrid 40s linear infinite;
-}
-
-@keyframes moveGrid{
-from{transform:translate(0,0);}
-to{transform:translate(-60px,-60px);}
-}
-
-/* ===============================
-   FADE IN
-================================ */
-
 .fade-in{
 opacity:0;
 transform:translateY(20px);
@@ -146,16 +100,12 @@ opacity:1;
 transform:translateY(0);
 }
 
-/* ===============================
-   PROGRESS BAR
-================================ */
-
 .bar{
-width:70%;
-height:14px;
+width:80%;
+height:16px;
 background:#111;
 margin:20px auto;
-border-radius:10px;
+border-radius:12px;
 overflow:hidden;
 }
 
@@ -163,17 +113,16 @@ overflow:hidden;
 height:100%;
 width:0;
 background:linear-gradient(90deg,#00f7ff,#7a5cff);
+transition:width 1.5s ease;
 }
-
-/* ===============================
-   VAULT BLUR
-================================ */
 
 .blur-lock{
 filter:blur(6px);
 pointer-events:none;
 opacity:0.6;
 }
+
+.hidden{display:none;}
 
 input{
 padding:10px;
@@ -188,10 +137,7 @@ footer{
 padding:40px;
 text-align:center;
 opacity:0.6;
-font-size:14px;
 }
-
-.hidden{display:none;}
 
 </style>
 </head>
@@ -199,84 +145,104 @@ font-size:14px;
 <body>
 
 <!-- HERO -->
-
-<section class="layer layer-dark hero-bg">
+<section class="layer layer-dark">
 <div class="section-inner fade-in">
-
 <h1>ZEITERSTRATS</h1>
 <p id="rotatingQuote"></p>
-
-<div id="liveStatus">Status: Offline</div>
-<div id="countdown"></div>
-
-<br>
-
-<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live Now</a>
-<button class="btn" onclick="scrollToCommunity()">Join the Community</button>
-
+<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live</a>
 </div>
 </section>
 
 <!-- PERFORMANCE -->
-
 <section class="layer layer-soft">
 <div class="section-inner fade-in">
-
-<h2 class="layer-title">Performance Overview</h2>
+<h2>Performance Overview</h2>
 
 <div class="grid">
-
 <div class="panel">
 <h3>Total Earnings</h3>
 <div>$<span id="earnings">0</span></div>
 </div>
 
 <div class="panel">
-<h3>Stream Streak</h3>
-<div><span id="streak">0</span> Days</div>
-</div>
-
-<div class="panel">
 <h3>Performance Tier</h3>
-<div id="tier">Observer</div>
+<div id="tierName">Observer</div>
+
+<div class="bar">
+<div id="tierFill" class="fill"></div>
 </div>
 
+<div id="tierProgressText"></div>
 </div>
-
+</div>
 </div>
 </section>
 
-<!-- VAULT -->
-
-<section class="layer layer-glass">
+<!-- DASHBOARD -->
+<section class="layer layer-dark">
 <div class="section-inner fade-in">
+<h2>Member Dashboard</h2>
 
-<h2 class="layer-title">Pro Strategy Vault</h2>
+<div id="dashboardLocked">
+<p>Login to access your dashboard.</p>
+</div>
+
+<div id="dashboardUnlocked" class="hidden">
 
 <div class="panel">
+<h3>Welcome Back</h3>
+<p id="memberEmail"></p>
+</div>
 
+<div class="panel">
+<h3>Member Status</h3>
+<p id="memberTier"></p>
+</div>
+
+<div class="panel">
+<h3>Pro Vault</h3>
 <div id="vaultContent" class="blur-lock">
-<p>Advanced routing frameworks</p>
-<p>Performance scaling systems</p>
-<p>Structured execution models</p>
+<p>Advanced routing systems</p>
+<p>Execution frameworks</p>
+<p>Scaling models</p>
+</div>
+<br>
+<button class="btn-pro btn" onclick="unlockVault()">Unlock Pro</button>
+</div>
+
 </div>
 
 <br>
 
-<button class="btn-pro btn" onclick="unlockVault()">Unlock Pro Access</button>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password"><br>
 
-</div>
+<button class="btn" onclick="register()">Register</button>
+<button class="btn" onclick="login()">Login</button>
+<button class="btn" onclick="logout()">Logout</button>
 
 </div>
 </section>
 
+<!-- STRIPE PRO (STRUCTURE READY) -->
+<section class="layer layer-glass">
+<div class="section-inner fade-in">
+<h2>Upgrade to Pro</h2>
+<div class="panel">
+<p>Unlock full strategy systems.</p>
+<button class="btn-pro btn" onclick="startCheckout()">Upgrade with Stripe</button>
+</div>
+</div>
+</section>
+
 <footer>
-© 2026 ZEITERSTRATS | Build v4 | Status: Active
+© 2026 ZEITERSTRATS | Build v5 | Platform Mode
 </footer>
 
 <script>
 
-/* SUPABASE */
+/* ===== SUPABASE ===== */
+
 const supabase = window.supabase.createClient(
 "YOUR_SUPABASE_URL",
 "YOUR_ANON_KEY"
@@ -284,13 +250,14 @@ const supabase = window.supabase.createClient(
 
 let currentUser=null;
 
-/* QUOTES */
+/* ===== QUOTES ===== */
+
 const quotes=[
 "Consistency compounds.",
 "Precision beats impulse.",
-"Structure wins long term.",
-"Smart execution scales.",
-"Discipline creates growth."
+"Structured growth scales.",
+"Smart execution wins.",
+"Performance is engineered."
 ];
 
 function newQuote(){
@@ -299,7 +266,8 @@ document.getElementById("rotatingQuote").innerText=quotes[r];
 }
 newQuote();
 
-/* SCROLL REVEAL */
+/* ===== SCROLL REVEAL ===== */
+
 const faders=document.querySelectorAll('.fade-in');
 const observer=new IntersectionObserver(entries=>{
 entries.forEach(entry=>{
@@ -310,29 +278,76 @@ entry.target.classList.add('visible');
 });
 faders.forEach(el=>observer.observe(el));
 
-/* VAULT */
-function unlockVault(){
-if(currentUser){
-document.getElementById("vaultContent").classList.remove("blur-lock");
-}else{
-alert("Join the community to unlock Pro access.");
-}
-}
+/* ===== TIER SYSTEM ===== */
 
-/* TIER */
 let visits=localStorage.getItem("visits")||0;
 visits++;
 localStorage.setItem("visits",visits);
 
-function getTier(){
-if(visits>50)return"Elite";
-if(visits>25)return"Advanced";
-if(visits>10)return"Strategic";
-return"Observer";
+function calculateTier(){
+if(visits>50) return {name:"Elite",progress:100};
+if(visits>25) return {name:"Advanced",progress:75};
+if(visits>10) return {name:"Strategic",progress:50};
+return {name:"Observer",progress:20};
 }
-document.getElementById("tier").innerText=getTier();
 
-/* EARNINGS */
+const tier=calculateTier();
+document.getElementById("tierName").innerText=tier.name;
+document.getElementById("tierFill").style.width=tier.progress+"%";
+document.getElementById("tierProgressText").innerText=
+tier.progress+"% to next tier";
+
+/* ===== AUTH ===== */
+
+async function register(){
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+const { error }=await supabase.auth.signUp({email,password});
+if(error) alert(error.message);
+else alert("Check email to confirm.");
+}
+
+async function login(){
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+const { data,error }=await supabase.auth.signInWithPassword({email,password});
+if(error) alert(error.message);
+else{
+currentUser=data.user;
+unlockDashboard();
+}
+}
+
+function unlockDashboard(){
+document.getElementById("dashboardLocked").classList.add("hidden");
+document.getElementById("dashboardUnlocked").classList.remove("hidden");
+document.getElementById("memberEmail").innerText=currentUser.email;
+document.getElementById("memberTier").innerText="Community Member";
+}
+
+async function logout(){
+await supabase.auth.signOut();
+location.reload();
+}
+
+/* ===== VAULT ===== */
+
+function unlockVault(){
+if(currentUser){
+document.getElementById("vaultContent").classList.remove("blur-lock");
+}else{
+alert("Login required.");
+}
+}
+
+/* ===== STRIPE PLACEHOLDER ===== */
+
+function startCheckout(){
+alert("Stripe checkout will connect here once backend is added.");
+}
+
+/* ===== EARNINGS ANIMATION ===== */
+
 let target=318400000;
 let current=0;
 function animate(){
@@ -342,35 +357,6 @@ document.getElementById("earnings").innerText=current.toLocaleString();
 requestAnimationFrame(animate);
 }}
 animate();
-
-/* STREAK */
-let last=new Date("2026-03-10");
-let now=new Date();
-let diff=Math.ceil(Math.abs(now-last)/(1000*60*60*24));
-document.getElementById("streak").innerText=diff;
-
-/* COUNTDOWN */
-function updateCountdown(){
-let next=new Date("2026-03-16T19:00:00");
-let now=new Date();
-let diff=next-now;
-if(diff<=0){
-document.getElementById("countdown").innerText="Live Soon";
-return;
-}
-let h=Math.floor(diff/(1000*60*60));
-let m=Math.floor((diff%(1000*60*60))/(1000*60));
-let s=Math.floor((diff%(1000*60))/1000);
-document.getElementById("countdown").innerText=
-"Next Stream In: "+h+"h "+m+"m "+s+"s";
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-/* SCROLL */
-function scrollToCommunity(){
-window.scrollTo({top:800,behavior:"smooth"});
-}
 
 </script>
 
