@@ -10,8 +10,8 @@
       font-family: 'Segoe UI', sans-serif;
       background: #0b0f14;
       color: white;
-      overflow-x: hidden;
       text-align: center;
+      overflow-x: hidden;
     }
 
     body::before {
@@ -43,7 +43,7 @@
     }
 
     header {
-      padding: 80px 20px 40px;
+      padding: 100px 20px 60px;
     }
 
     h1 {
@@ -52,31 +52,13 @@
       background: linear-gradient(90deg,#00ffe0,#7a5cff,#ff00c8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
     }
 
     .tagline {
       font-size: 20px;
       opacity: 0.8;
       margin-bottom: 30px;
-    }
-
-    .live-badge {
-      display: inline-block;
-      background: red;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    section {
-      padding: 60px 20px;
-    }
-
-    h2 {
-      font-size: 32px;
-      margin-bottom: 20px;
-      color: #00ffe0;
     }
 
     .btn {
@@ -93,7 +75,36 @@
 
     .btn:hover {
       background: #5d3cff;
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+    }
+
+    section {
+      padding: 80px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #00ffe0;
+    }
+
+    .pillars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .pillar {
+      width: 250px;
+    }
+
+    .pillar h3 {
+      color: #7a5cff;
+      margin-bottom: 10px;
     }
 
     .socials a {
@@ -103,22 +114,15 @@
       font-size: 18px;
     }
 
-    input {
-      padding: 12px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
-      margin-right: 10px;
-    }
-
     footer {
-      padding: 40px 20px;
+      padding: 50px 20px;
       opacity: 0.6;
       font-size: 14px;
     }
 
     @media(max-width:768px){
       h1 { font-size: 42px; }
+      .pillars { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
@@ -127,14 +131,49 @@
 
 <header>
   <h1>ZEITERSTRATS</h1>
-  <div class="tagline">Strategic Intelligence. Competitive Precision. Elite Execution.</div>
-
-  <div class="live-badge">🔴 LIVE NOW</div>
+  <div class="tagline">
+    Strategic Intelligence. Competitive Precision. Elite Execution.
+  </div>
 
   <a href="https://twitch.tv/YOUR_TWITCH_NAME" target="_blank" class="btn">
-    Watch on Twitch
+    Watch Live on Twitch
   </a>
 </header>
+
+<section>
+  <h2>The Mission</h2>
+  <p>
+    ZEITERSTRATS is built around one principle:
+    calculated dominance through strategy.
+  </p>
+  <p>
+    This isn’t chaos gameplay. This is discipline, pattern recognition,
+    real-time decision analysis, and elite execution under pressure.
+  </p>
+</section>
+
+<section>
+  <h2>Why Watch ZEITERSTRATS?</h2>
+
+  <div class="pillars">
+
+    <div class="pillar">
+      <h3>🎯 Strategic Breakdown</h3>
+      <p>Every move has purpose. Learn the logic behind elite-level decisions.</p>
+    </div>
+
+    <div class="pillar">
+      <h3>🧠 High IQ Gameplay</h3>
+      <p>Pattern recognition, prediction, and calculated risk management.</p>
+    </div>
+
+    <div class="pillar">
+      <h3>🔍 Real-Time Analysis</h3>
+      <p>Understand the “why” behind each play — not just the outcome.</p>
+    </div>
+
+  </div>
+</section>
 
 <section>
   <h2>Stream Schedule</h2>
@@ -143,7 +182,7 @@
 </section>
 
 <section>
-  <h2>Top Platforms</h2>
+  <h2>Connect</h2>
   <div class="socials">
     <a href="https://instagram.com/iron_grip216" target="_blank">Instagram</a>
     <a href="https://youtube.com/@ZeiterStrats" target="_blank">YouTube</a>
@@ -151,26 +190,8 @@
   </div>
 </section>
 
-<section>
-  <h2>Join the Inner Circle</h2>
-  <p>Be first for stream alerts, drops, and strategy breakdowns.</p>
-  <input type="email" placeholder="Enter your email">
-  <button class="btn">Join</button>
-</section>
-
-<section>
-  <h2>Merch Coming Soon</h2>
-  <p>Premium ZEITERSTRATS apparel drops soon.</p>
-</section>
-
-<section>
-  <h2>Community</h2>
-  <a href="#" class="btn">Join Discord</a>
-  <a href="#" class="btn">Support the Stream</a>
-</section>
-
 <footer>
-  © 2026 ZEITERSTRATS — Built for Strategic Dominance
+  © 2026 ZEITERSTRATS — Strategic Authority
 </footer>
 
 </body>
