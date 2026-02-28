@@ -3,259 +3,251 @@
 <head>
   <title>ZEITERSTRATS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0b0f14;
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-    }
 
-    /* Animated Grid Background */
-    body::before {
-      content: "";
-      position: fixed;
-      width: 200%;
-      height: 200%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0,255,200,0.05),
-        rgba(0,255,200,0.05) 1px,
-        transparent 1px,
-        transparent 40px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(0,255,200,0.05),
-        rgba(0,255,200,0.05) 1px,
-        transparent 1px,
-        transparent 40px
-      );
-      animation: moveGrid 20s linear infinite;
-      z-index: -1;
-    }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #050810;
+    color: white;
+    text-align: center;
+    transition: 0.4s ease;
+  }
 
-    @keyframes moveGrid {
-      0% { transform: translate(0,0); }
-      100% { transform: translate(-200px,-200px); }
-    }
+  body.operation {
+    background: #000;
+  }
 
-    header {
-      padding: 100px 20px 60px;
-    }
+  header {
+    padding: 100px 20px 60px;
+  }
 
-    /* BRAND TITLE */
-    #brand {
-      font-size: 76px;
-      font-weight: 900;
-      letter-spacing: 4px;
-      cursor: pointer;
-      user-select: none;
-      background: linear-gradient(90deg,#00ffe0,#7a5cff,#ff00c8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transition: all 0.4s ease;
-    }
+  h1 {
+    font-size: 70px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    cursor: pointer;
+    background: linear-gradient(90deg,#00e5ff,#7a5cff,#ff007f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: 0.3s ease;
+  }
 
-    /* Effects */
-    .effect1 {
-      text-shadow:
-        0 0 10px #00ffe0,
-        0 0 20px #00ffe0,
-        0 0 40px #00ffe0;
-    }
+  .glow { text-shadow: 0 0 25px #ff007f; }
+  .gold { color: gold; -webkit-text-fill-color: gold; }
+  .pulse { animation: pulse 1s infinite; }
 
-    .effect2 {
-      animation: glitch 0.3s linear 3;
-    }
+  @keyframes pulse {
+    0%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+    100%{transform:scale(1)}
+  }
 
-    @keyframes glitch {
-      0% { transform: translate(2px, -2px); }
-      25% { transform: translate(-2px, 2px); }
-      50% { transform: translate(2px, 2px); }
-      75% { transform: translate(-2px, -2px); }
-      100% { transform: translate(0); }
-    }
+  .toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #111;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #333;
+  }
 
-    .effect3 {
-      background: linear-gradient(90deg,#ffffff,#aaaaaa,#ffffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  .btn {
+    display: inline-block;
+    margin: 12px;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(90deg,#7a5cff,#00e5ff);
+    transition: 0.3s ease;
+  }
 
-    .effect4 {
-      color: #ffffff;
-      text-shadow:
-        0 0 5px #7a5cff,
-        0 0 15px #7a5cff,
-        0 0 30px #ff00c8;
-    }
+  .btn.live { background: red; box-shadow: 0 0 20px red; }
 
-    .effect5 {
-      transform: scale(1.1);
-    }
+  section { padding: 80px 20px; }
 
-    .tagline {
-      font-size: 20px;
-      opacity: 0.8;
-      margin: 20px 0 30px;
-    }
+  .meter {
+    width: 60%;
+    height: 20px;
+    margin: 15px auto;
+    background: #222;
+    border-radius: 20px;
+    overflow: hidden;
+  }
 
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
-      background: #7a5cff;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-      margin: 10px;
-      transition: 0.3s;
-    }
+  .meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,#ff0000,#ff007f);
+    transition: width 1s ease;
+  }
 
-    .btn:hover {
-      background: #5d3cff;
-      transform: translateY(-3px);
-    }
+  .rank-bar {
+    width: 60%;
+    height: 15px;
+    background: #222;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
 
-    section {
-      padding: 80px 20px;
-      max-width: 1000px;
-      margin: auto;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 0.8s ease;
-    }
+  .rank-fill {
+    height: 100%;
+    width: 45%;
+    background: linear-gradient(90deg,#00e5ff,#7a5cff);
+  }
 
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 
-    h2 {
-      font-size: 32px;
-      margin-bottom: 20px;
-      color: #00ffe0;
-    }
+  .card {
+    background: #111;
+    padding: 20px;
+    width: 200px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #333;
+    transition: 0.3s ease;
+  }
 
-    .pillars {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 40px;
-    }
+  .card:hover { transform: translateY(-5px); }
 
-    .pillar {
-      width: 250px;
-    }
+  .selected { border: 1px solid #00e5ff; }
 
-    .pillar h3 {
-      color: #7a5cff;
-      margin-bottom: 10px;
-    }
+  .vault {
+    font-size: 20px;
+    padding: 30px;
+    border: 2px dashed #555;
+    cursor: pointer;
+  }
 
-    .socials a {
-      margin: 0 15px;
-      color: #00ffe0;
-      text-decoration: none;
-      font-size: 18px;
-    }
+  input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin: 5px;
+  }
 
-    input {
-      padding: 12px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
-      margin-right: 10px;
-    }
-
-    footer {
-      padding: 50px 20px;
-      opacity: 0.6;
-      font-size: 14px;
-    }
-
-    @media(max-width:768px){
-      #brand { font-size: 46px; }
-      .pillars { flex-direction: column; align-items: center; }
-    }
+  footer { padding: 40px; opacity: 0.5; }
 
   </style>
 </head>
-
 <body>
 
+<div class="toggle" onclick="toggleMode()">Switch Mode</div>
+
 <header>
-  <h1 id="brand">ZEITERSTRATS</h1>
+  <h1 id="logo" onclick="logoEffect()">ZEITERSTRATS</h1>
 
-  <div class="tagline">
-    Strategic Intelligence. Competitive Precision. Elite Execution.
-  </div>
+  <div id="liveStatus">Checking status...</div>
+  <div id="streamTitle"></div>
+  <div id="viewerCount"></div>
 
-  <a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
-    Watch Live on Twitch
+  <div class="meter"><div id="heatFill" class="meter-fill"></div></div>
+
+  <a id="liveBtn" href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
+    Enter Live Operation
   </a>
 </header>
 
 <section>
-  <h2>The Mission</h2>
-  <p>
-    ZEITERSTRATS is built around calculated dominance through discipline,
-    pattern recognition, and real-time tactical execution.
-  </p>
-  <p>
-    Strategy-first gameplay. No chaos. Only precision.
-  </p>
+  <h2>ZEITERSTRATS RANK: 14</h2>
+  <div class="rank-bar"><div class="rank-fill"></div></div>
 </section>
 
 <section>
-  <h2>Why Watch ZEITERSTRATS?</h2>
-  <div class="pillars">
-    <div class="pillar">
-      <h3>🎯 Strategic Breakdown</h3>
-      <p>Understand elite-level decisions.</p>
-    </div>
-    <div class="pillar">
-      <h3>🧠 High IQ Gameplay</h3>
-      <p>Calculated risk management.</p>
-    </div>
-    <div class="pillar">
-      <h3>🔍 Real-Time Analysis</h3>
-      <p>Learn the “why” behind every play.</p>
-    </div>
+  <h2>Last Operation Results</h2>
+  ✔ $4.2M Earned<br>
+  ✔ 3 Heists Completed<br>
+  ✔ Rank +2
+</section>
+
+<section>
+  <h2>Choose Your Role</h2>
+  <div class="cards">
+    <div class="card" onclick="selectRole(this)">Solo Grinder</div>
+    <div class="card" onclick="selectRole(this)">Heist Specialist</div>
+    <div class="card" onclick="selectRole(this)">Market Analyst</div>
+    <div class="card" onclick="selectRole(this)">Casual Operator</div>
+  </div>
+</section>
+
+<section>
+  <h2>Join The Tactical Unit</h2>
+  <input type="email" placeholder="Enter Email">
+  <button class="btn">Receive Briefings</button>
+</section>
+
+<section>
+  <h2>Merch Vault</h2>
+  <div class="vault" onclick="alert('Access Restricted — Deployment Pending 👀')">
+    🔒 Classified Vault — Coming Soon
   </div>
 </section>
 
 <footer>
-  © 2026 ZEITERSTRATS — Strategic Authority
+  © 2026 ZEITERSTRATS
 </footer>
 
 <script>
-  const brand = document.getElementById("brand");
-  let clickCount = 0;
-  const effects = ["effect1","effect2","effect3","effect4","effect5"];
 
-  brand.addEventListener("click", () => {
-    brand.classList.remove(...effects);
-    const effect = effects[clickCount % effects.length];
-    brand.classList.add(effect);
-    clickCount++;
-  });
+function toggleMode(){
+  document.body.classList.toggle("operation");
+}
 
-  const sections = document.querySelectorAll("section");
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
-    });
-  });
+function logoEffect(){
+  const logo = document.getElementById("logo");
+  const effects = ["glow","gold","pulse"];
+  logo.classList.remove("glow","gold","pulse");
+  const random = effects[Math.floor(Math.random()*effects.length)];
+  logo.classList.add(random);
+}
 
-  sections.forEach(section => observer.observe(section));
+function selectRole(card){
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));
+  card.classList.add("selected");
+}
+
+async function checkLive(){
+  try{
+    const res = await fetch("/api/live-status");
+    const data = await res.json();
+
+    const status = document.getElementById("liveStatus");
+    const title = document.getElementById("streamTitle");
+    const viewers = document.getElementById("viewerCount");
+    const heat = document.getElementById("heatFill");
+    const btn = document.getElementById("liveBtn");
+
+    if(data.live){
+      status.innerHTML = "🔴 LIVE NOW";
+      title.innerHTML = "Stream: " + data.title;
+      viewers.innerHTML = "Viewers: " + data.viewers;
+      btn.classList.add("live");
+
+      let intensity = Math.min(100, data.viewers * 2);
+      heat.style.width = intensity + "%";
+
+    } else {
+      status.innerHTML = "⚫ Offline";
+      heat.style.width = "0%";
+      btn.classList.remove("live");
+    }
+  }catch{
+    document.getElementById("liveStatus").innerHTML="Status unavailable";
+  }
+}
+
+checkLive();
+setInterval(checkLive,60000);
+
 </script>
 
 </body>
