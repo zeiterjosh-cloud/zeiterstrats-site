@@ -3,104 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEITERSTRATS</title>
 
-<title>ZEITERSTRATS | GTA Strategy & Performance Optimization</title>
-
-<meta name="description" content="ZEITERSTRATS delivers high-level GTA strategy, money optimization, efficiency breakdowns, and live performance-driven gameplay.">
-<meta name="keywords" content="GTA strategy, GTA money guide, GTA optimization, Twitch GTA streamer">
-<meta name="author" content="ZEITERSTRATS">
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-XXXXXXXXXX');
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 html{scroll-behavior:smooth;}
-
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   background:#0a0a0f;
   color:#e6ffff;
   text-align:center;
-  overflow-x:hidden;
 }
-
-#bgCanvas{
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:-1;
-}
-
-header{
-  padding:100px 20px 60px;
-}
-
+header{padding:100px 20px 60px;}
 h1{
   font-size:64px;
   letter-spacing:6px;
   color:#00f7ff;
   text-shadow:0 0 25px #00f7ff;
 }
-
-.sub{opacity:0.7;}
-
-.section{
-  padding:80px 20px;
-  max-width:1100px;
-  margin:auto;
-}
-
+.section{padding:80px 20px;max-width:1100px;margin:auto;}
 .panel{
   backdrop-filter:blur(14px);
-  background:rgba(20,20,30,0.55);
-  border:1px solid rgba(0,247,255,0.25);
+  background:rgba(20,20,30,0.6);
+  border:1px solid rgba(0,247,255,0.3);
   padding:35px;
   margin:30px 0;
   border-radius:16px;
   transition:0.3s;
 }
-
 .panel:hover{transform:translateY(-6px);}
-
 .btn{
   display:inline-block;
-  margin:15px;
-  padding:14px 32px;
+  margin:10px;
+  padding:12px 28px;
   border-radius:8px;
   border:1px solid #00f7ff;
   color:#00f7ff;
   text-decoration:none;
-  transition:0.3s;
   cursor:pointer;
+  transition:0.3s;
 }
-
-.btn:hover{
-  background:#00f7ff;
-  color:black;
-}
-
-.live-dot{
-  width:10px;height:10px;
-  border-radius:50%;
-  background:red;
-  display:inline-block;
-  margin-right:8px;
-  animation:pulse 1.2s infinite;
-}
-
-@keyframes pulse{
-  0%{opacity:1}
-  50%{opacity:0.3}
-  100%{opacity:1}
-}
-
+.btn:hover{background:#00f7ff;color:black;}
 .bar{
   width:70%;
   height:16px;
@@ -109,113 +54,97 @@ h1{
   border-radius:12px;
   overflow:hidden;
 }
-
 .fill{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#00f7ff,#7a5cff);
   transition:1s ease;
 }
-
+.hidden{display:none;}
+.pro-mode{
+  background:#050509 !important;
+  color:#7a5cff !important;
+}
 input{
-  padding:12px;
-  width:260px;
+  padding:10px;
+  margin:6px;
   border-radius:6px;
   border:none;
-  margin:10px;
 }
-
-footer{
-  padding:60px;
-  opacity:0.4;
-  font-size:14px;
-}
+footer{padding:60px;opacity:0.4;}
 </style>
-</<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>>
+</head>
 
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
 <header>
 <h1>ZEITERSTRATS</h1>
-<div class="sub">High-Level GTA Strategy & Performance</div>
+<p>High-Level Strategy & Optimization</p>
 
 <div id="liveStatus">Checking live status...</div>
-<div id="streamTitle"></div>
 <div id="viewerCount"></div>
 
-<div class="bar"><div id="heatFill" class="fill"></div></div>
-
-<a href="https://twitch.tv/zeiterstrats"
-   target="_blank"
-   class="btn"
-   onclick="trackLiveClick()">
-Watch Live on Twitch
+<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
+Watch Live
 </a>
+
+<button class="btn" onclick="togglePro()">Pro Mode</button>
 </header>
 
 <div class="section">
 
+<!-- Earnings -->
 <div class="panel">
 <h2>Performance Overview</h2>
-<div>Total GTA Earnings: $<span id="earnings">0</span></div>
-<div>Average Session Profit: $2.1M</div>
+<div>Total Earnings: $<span id="earnings">0</span></div>
 <div>Efficiency Rating: 94%</div>
 <div>Current Rank: 15</div>
 </div>
 
+<!-- Streak -->
 <div class="panel">
-<h2>About ZEITERSTRATS</h2>
-<p style="max-width:700px;margin:auto;opacity:0.9;">
-ZEITERSTRATS focuses on maximizing GTA results through structured strategy,
-data-driven decisions, and performance optimization. Every stream is built
-around measurable growth and smarter gameplay.
-</p>
+<h2>Consistency Tracker</h2>
+<div>Streaming Streak: <span id="streak"></span> Days 🔥</div>
 </div>
 
+<!-- Logs -->
 <div class="panel">
-<h2>Support the Channel</h2>
-<p>
-If you enjoy the content and strategies, you can support future upgrades
-and higher production quality below.
-</p>
-
-<a href="YOUR_STRIPE_LINK_HERE"
-   target="_blank"
-   class="btn"
-   onclick="trackDonationClick()">
-Support ZEITERSTRATS
-</a>
-
-<div class="bar">
-  <div id="upgradeFill" class="fill"></div>
+<h2>Performance Log</h2>
+<div id="logContainer"></div>
 </div>
 
-<div>$420 / $1000 Monthly Upgrade Goal</div>
-</div>
-
+<!-- MEMBER LOGIN -->
 <div class="panel">
-<h2>Get Stream Updates</h2>
+<h2>Member Access</h2>
 
-<form action="https://formspree.io/f/xgvzqkpo"
-      method="POST"
-      onsubmit="trackSubscribe()">
-<input type="email" name="email" placeholder="Enter your email" required>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
 <br>
-<button class="btn">Subscribe for Updates</button>
-</form>
 
+<button class="btn" onclick="register()">Register</button>
+<button class="btn" onclick="login()">Login</button>
+<button class="btn" onclick="logout()">Logout</button>
+
+<div id="memberStatus"></div>
 </div>
 
+<!-- PREMIUM VAULT -->
 <div class="panel">
-<h2>Media & Sponsorship</h2>
-<p>
-Monthly Viewers: Growing<br>
-Average Watch Time: High Engagement<br>
-Audience: 18–34 (Gaming Focused)<br><br>
-Business Contact: jz1213456789@outlook.com
-</p>
+<h2>Premium Strategy Vault 🔒</h2>
+<button class="btn" onclick="unlockVault()">Access Vault</button>
+
+<div id="vaultContent" class="hidden">
+<p>Advanced Rotation: Chain high-margin cycles.</p>
+<p>Elite Optimization: Sync passive income streams.</p>
+</div>
+</div>
+
+<!-- DONATION GOAL -->
+<div class="panel">
+<h2>Upgrade the Stream</h2>
+<p id="upgradeText"></p>
+<div class="bar"><div id="goalFill" class="fill"></div></div>
+<div id="goalAmount"></div>
 </div>
 
 </div>
@@ -226,155 +155,125 @@ Business Contact: jz1213456789@outlook.com
 
 <script>
 
+// SUPABASE CONNECT
 const supabase = window.supabase.createClient(
-  "https://jklcxvrwqyxkfpmpkwbv.supabase.com",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNDk4NTQsImV4cCI6MjA4NzgyNTg1NH0.swm1GeFu9iCzi_2XeskrESgz2rR2bVJlA7P3g0XVPyM"
+  "YOUR_SUPABASE_URL",
+  "YOUR_ANON_KEY"
 );
 
 let currentUser = null;
 
 // REGISTER
-async function register() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
-
-  if (error) {
-    alert(error.message);
-  } else {
-    alert("Registration successful. Check your email.");
-  }
+async function register(){
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  const { error } = await supabase.auth.signUp({ email,password });
+  if(error) alert(error.message);
+  else alert("Check your email to confirm.");
 }
 
-// <div class="panel">
-<h2>Member Access</h2>
-
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-
-<br>
-
-<button class="btn" onclick="register()">Register</button>
-<button class="btn" onclick="login()">Login</button>
-<button class="btn" onclick="logout()">Logout</button>
-
-<div id="memberStatus"></div>
-</div>
-
-// CHECK SESSION ON LOAD
-async function checkSession() {
-  const { data } = await supabase.auth.getUser();
-  if (data.user) {
-    currentUser = data.user;
-    document.getElementById("memberStatus").innerText =
-      "Logged in as " + currentUser.email;
+// LOGIN
+async function login(){
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  const { data,error }=await supabase.auth.signInWithPassword({email,password});
+  if(error) alert(error.message);
+  else{
+    currentUser=data.user;
+    document.getElementById("memberStatus").innerText=
+    "Logged in as "+currentUser.email;
   }
 }
-checkSession();
 
 // LOGOUT
-async function logout() {
+async function logout(){
   await supabase.auth.signOut();
   location.reload();
 }
 
-// VAULT ACCESS
-function unlockVault() {
-  if (currentUser) {
-    document.getElementById("vaultContent").classList.remove("hidden");
-  } else {
-    alert("Login required.");
+// SESSION CHECK
+async function checkSession(){
+  const { data }=await supabase.auth.getUser();
+  if(data.user){
+    currentUser=data.user;
+    document.getElementById("memberStatus").innerText=
+    "Logged in as "+currentUser.email;
   }
 }
+checkSession();
 
-</script>
+// VAULT LOCK
+function unlockVault(){
+  if(currentUser)
+    document.getElementById("vaultContent").classList.remove("hidden");
+  else alert("Login required.");
+}
 
-// Earnings Animation
-let earningsTarget = 318400000;
-let earningsCurrent = 0;
+// EARNINGS ANIMATION
+let earningsTarget=318400000;
+let earningsCurrent=0;
 function animateEarnings(){
-  if(earningsCurrent < earningsTarget){
-    earningsCurrent += 3000000;
-    document.getElementById("earnings").innerText =
-      earningsCurrent.toLocaleString();
-    requestAnimationFrame(animateEarnings);
-  }
+ if(earningsCurrent<earningsTarget){
+  earningsCurrent+=2500000;
+  document.getElementById("earnings").innerText=
+   earningsCurrent.toLocaleString();
+  requestAnimationFrame(animateEarnings);
+ }
 }
 animateEarnings();
 
-// Live Status
-async function checkLive(){
-  try{
-    const res = await fetch("/api/live-status");
-    const data = await res.json();
-    if(data.live){
-      document.getElementById("liveStatus").innerHTML='<span class="live-dot"></span>Live Now';
-      document.getElementById("streamTitle").innerHTML=data.title;
-      document.getElementById("viewerCount").innerHTML="Viewers: "+data.viewers;
-      document.getElementById("heatFill").style.width=Math.min(100,data.viewers*2)+"%";
-    }else{
-      document.getElementById("liveStatus").innerHTML="Currently Offline";
-      document.getElementById("heatFill").style.width="0%";
-    }
-  }catch{
-    document.getElementById("liveStatus").innerHTML="Status unavailable";
-  }
-}
-checkLive();
-setInterval(checkLive,60000);
+// STREAK
+let lastStreamDate=new Date("2026-03-10");
+let today=new Date();
+let diff=Math.ceil(Math.abs(today-lastStreamDate)/(1000*60*60*24));
+document.getElementById("streak").innerText=diff;
 
-// Analytics Tracking
-function trackLiveClick(){
-  gtag('event','click_live_button');
+// LOGS
+const sessions=[
+ {date:"3/10",profit:3400000,time:"1h 42m"},
+ {date:"3/08",profit:2900000,time:"1h 30m"},
+ {date:"3/06",profit:4100000,time:"2h 05m"}
+];
+function renderLogs(){
+ const container=document.getElementById("logContainer");
+ sessions.forEach(s=>{
+  const div=document.createElement("div");
+  div.style.margin="8px 0";
+  div.innerHTML=`${s.date} – $${s.profit.toLocaleString()} – ${s.time}`;
+  container.appendChild(div);
+ });
 }
-function trackDonationClick(){
-  gtag('event','click_donation_button');
+renderLogs();
+
+// DONATION GOAL
+let currentRaised=420;
+let monthlyGoal=1000;
+function updateGoal(){
+ let percent=(currentRaised/monthlyGoal)*100;
+ document.getElementById("goalFill").style.width=percent+"%";
+ document.getElementById("goalAmount").innerText=
+ `$${currentRaised} / $${monthlyGoal} Monthly Goal`;
+
+ if(percent<50)
+  document.getElementById("upgradeText").innerText=
+  "Next Upgrade: 4K Camera";
+ else if(percent<90)
+  document.getElementById("upgradeText").innerText=
+  "Next Upgrade: Custom Graphics";
+ else
+  document.getElementById("upgradeText").innerText=
+  "Upgrade Almost Complete 🔥";
 }
-function trackSubscribe(){
-  gtag('event','email_subscribe');
+updateGoal();
+
+// PRO MODE
+function togglePro(){
+ document.body.classList.toggle("pro-mode");
 }
 
-// Particle Background
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+// LIVE STATUS PLACEHOLDER
+document.getElementById("liveStatus").innerText="Currently Offline";
 
-let particles=[];
-for(let i=0;i<60;i++){
-  particles.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    size:Math.random()*2,
-    speedY:Math.random()*0.5+0.2
-  });
-}
-
-function animateParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="rgba(0,247,255,0.3)";
-  particles.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-    ctx.fill();
-    p.y+=p.speedY;
-    if(p.y>canvas.height){
-      p.y=0;
-      p.x=Math.random()*canvas.width;
-    }
-  });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-window.addEventListener("resize",()=>{
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-});
 </script>
 
 </body>
