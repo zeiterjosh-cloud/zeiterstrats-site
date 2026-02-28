@@ -1,91 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZEITERSTRATS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZEITERSTRATS</title>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#070b14;
-  color:#e6ffff;
-  text-align:center;
-  padding-top:100px;
-}
-
-input{
-  padding:10px;
-  margin:8px;
-  background:#111;
-  border:1px solid #00f7ff;
-  color:white;
-  border-radius:6px;
-  width:250px;
-}
-
-button{
-  padding:10px 18px;
-  margin:8px;
-  background:#00f7ff;
-  border:none;
-  border-radius:6px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none;
-}
-
-.panel{
-  background:#111827;
-  padding:20px;
-  margin:20px auto;
-  max-width:500px;
-  border-radius:10px;
-}
-</style>
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body>
+<body style="background:#070b14;color:white;text-align:center;padding-top:100px;font-family:Arial">
 
-<div id="landing">
   <h1>ZEITERSTRATS</h1>
 
-  <input id="email" type="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Password"><br>
+  <input id="email" type="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
 
-  <button onclick="register()">Register</button>
-  <button onclick="login()">Login</button>
+  <button id="registerBtn">Register</button>
+  <button id="loginBtn">Login</button>
 
-  <p id="message"></p>
-</div>
-
-<div id="dashboard" class="hidden">
-  <h1>Dashboard</h1>
-  <div class="panel">
-    Welcome to ZEITER OS.
-  </div>
-  <button onclick="logout()">Logout</button>
-</div>
+  <p id="output"></p>
 
 <script>
 
-// ✅ YOUR REAL SUPABASE CONNECTION
+console.log("SCRIPT LOADED");
+
+// --- SUPABASE ---
 const supabase = window.supabase.createClient(
   "https://jklcxvrwqyxkfmpkwbv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNDk4NTQsImV4cCI6MjA4NzgyNTg1NH0.swm1GeFu9iCzi_2XeskrESgz2rR2bVJlA7P3g0XVPyM"
 );
 
-let currentUser = null;
+console.log("Supabase object:", supabase);
 
-// REGISTER
-async function register() {
+// --- BUTTON HANDLERS ---
+document.getElementById("registerBtn").addEventListener("click", async () => {
+  console.log("REGISTER CLICKED");
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
@@ -95,14 +46,16 @@ async function register() {
   });
 
   if (error) {
-    document.getElementById("message").innerText = error.message;
+    console.error(error);
+    document.getElementById("output").innerText = error.message;
   } else {
-    document.getElementById("message").innerText = "Check your email to confirm.";
+    document.getElementById("output").innerText = "Registration successful. Check email.";
   }
-}
+});
 
-// LOGIN
-async function login() {
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  console.log("LOGIN CLICKED");
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
@@ -112,30 +65,10 @@ async function login() {
   });
 
   if (error) {
-    document.getElementById("message").innerText = error.message;
+    console.error(error);
+    document.getElementById("output").innerText = error.message;
   } else {
-    currentUser = data.user;
-    enterDashboard();
-  }
-}
-
-// ENTER DASHBOARD
-function enterDashboard(){
-  document.getElementById("landing").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-}
-
-// LOGOUT
-async function logout(){
-  await supabase.auth.signOut();
-  location.reload();
-}
-
-// KEEP SESSION AFTER REFRESH
-supabase.auth.getSession().then(({ data }) => {
-  if (data.session) {
-    currentUser = data.session.user;
-    enterDashboard();
+    document.getElementById("output").innerText = "Logged in successfully.";
   }
 });
 
