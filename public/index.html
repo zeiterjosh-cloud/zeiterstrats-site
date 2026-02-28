@@ -23,6 +23,13 @@ background:linear-gradient(180deg,#070b14 0%,#0c111c 100%);
 h1{
 font-size:56px;
 margin-bottom:10px;
+transition:0.3s;
+cursor:pointer;
+}
+
+h1:hover{
+color:#00f7ff;
+text-shadow:0 0 15px #00f7ff;
 }
 
 .tagline{
@@ -75,23 +82,23 @@ font-weight:bold;
 color:#00f7ff;
 }
 
-footer{
-padding:40px;
-opacity:0.6;
+.progress-bar{
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.progress-fill{
+height:20px;
+background:#00f7ff;
+width:50%;
 }
 
 iframe{
 border-radius:14px;
 width:100%;
 height:450px;
-}
-
-input{
-padding:12px;
-border-radius:8px;
-border:1px solid #00f7ff;
-background:#0c111c;
-color:#fff;
 }
 </style>
 </head>
@@ -111,7 +118,9 @@ color:#fff;
 Latest Video
 </button>
 
-<div id="liveBadge" style="margin-top:25px;font-weight:bold;"></div>
+<div id="countdown" style="margin-top:25px;font-weight:bold;"></div>
+<div id="liveBadge" style="margin-top:10px;font-weight:bold;"></div>
+
 </div>
 
 <!-- LIVE STREAM -->
@@ -125,77 +134,93 @@ allowfullscreen>
 </div>
 </div>
 
-<!-- PERFORMANCE -->
+<!-- SUB GOAL -->
 <div class="section">
-<h2>Performance Overview</h2>
+<h2>Sub Goal</h2>
 <div class="card">
-<div class="stat" id="views">0</div>
-Total Strategy Views<br><br>
-
-<div class="stat" id="tips">0</div>
-Money Methods Shared<br><br>
-
-<div class="stat" id="rankings">0</div>
-Rankings Analyzed
+5 / 10 Subs
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
 </div>
 </div>
 
-<!-- DONATIONS -->
+<!-- CLIP WALL -->
 <div class="section">
-<h2>Support The Grind</h2>
+<h2>Top Strategy Clips</h2>
 <div class="card">
-If you’ve saved money using these strategies and want to support the grind —<br><br>
-
-<button class="button primary" onclick="window.open('https://paypal.me/YOURPAYPAL')">
-💰 Donate via PayPal
-</button>
-
-<button class="button secondary" onclick="window.open('https://cash.app/$YOURCASHAPP')">
-⚡ Donate via CashApp
-</button>
+<iframe src="https://clips.twitch.tv/embed?clip=AwkwardHelplessDonutKreygasm&parent=zeiterstrats-site-1.onrender.com"></iframe>
 </div>
 </div>
 
-<!-- VAULT -->
+<!-- WHY ZEITERSTRATS -->
 <div class="section">
-<h2>ZEITER Vault</h2>
+<h2>Why Watch ZEITERSTRATS?</h2>
 <div class="card">
-
-<div id="vaultLocked">
-🔒 Enter Access Code to Unlock Premium Strategy
-<br><br>
-<input id="vaultCode" type="password" placeholder="Enter Access Code">
-<br><br>
-<button class="button primary" onclick="unlockVault()">Unlock Vault</button>
-<div id="vaultMessage" style="margin-top:15px;"></div>
-</div>
-
-<div id="vaultContent" style="display:none;margin-top:20px;"></div>
-
+✔ No clickbait methods<br><br>
+✔ Real tested profit strategies<br><br>
+✔ Solo-friendly breakdowns<br><br>
+✔ Xbox-focused insights<br><br>
+✔ Smart grind optimization
 </div>
 </div>
 
-<!-- ABOUT -->
-<div class="section">
-<h2>About</h2>
-<div class="card">
-GTA Online Strategy 💰 Smart Buys. No Wasted Cash.<br><br>
-Money Methods & Rankings 🎯 Solo Grind Breakdown.<br><br>
-Xbox Series S 🔥 New Tips Every Weekend.
-</div>
-</div>
-
-<footer>
+<footer style="padding:40px;opacity:0.6;">
 © 2026 ZEITERSTRATS
 </footer>
 
 <script>
-// LIVE BADGE
+
+// ===== ROTATING WEEKEND COUNTDOWN =====
+function getNextWeekend(){
+const now = new Date();
+let day = now.getDay();
+
+let daysUntilSaturday = (6 - day + 7) % 7;
+let daysUntilSunday = (7 - day) % 7;
+
+let nextDay;
+
+if(daysUntilSaturday === 0 || daysUntilSaturday < daysUntilSunday){
+nextDay = 6;
+}else{
+nextDay = 0;
+}
+
+let target = new Date();
+target.setDate(now.getDate() + ((nextDay - day + 7) % 7));
+target.setHours(15,0,0,0); // 3PM
+
+if(target < now){
+target.setDate(target.getDate()+7);
+}
+
+return target;
+}
+
+function updateCountdown(){
+const now = new Date();
+const target = getNextWeekend();
+const diff = target - now;
+
+const d = Math.floor(diff / (1000*60*60*24));
+const h = Math.floor((diff / (1000*60*60)) % 24);
+const m = Math.floor((diff / (1000*60)) % 60);
+
+document.getElementById("countdown").innerHTML =
+"Next Stream: " + target.toLocaleDateString() + " 3PM<br>Starts in: " + d + "d " + h + "h " + m + "m";
+}
+
+setInterval(updateCountdown,60000);
+updateCountdown();
+
+// ===== LIVE BADGE =====
 async function checkLive(){
 try{
 const res = await fetch("https://decapi.me/twitch/uptime/zeiterstrats");
 const text = await res.text();
 const badge = document.getElementById("liveBadge");
+
 if(text.toLowerCase().includes("offline")){
 badge.innerHTML="🔴 Currently Offline";
 badge.style.color="#ff4d4d";
@@ -205,95 +230,10 @@ badge.style.color="#00ff88";
 }
 }catch{}
 }
+
 checkLive();
 setInterval(checkLive,60000);
 
-// ANIMATED STATS
-function animateValue(id,end){
-let start=0;
-let increment=end/100;
-let obj=document.getElementById(id);
-let timer=setInterval(()=>{
-start+=increment;
-if(start>=end){
-start=end;
-clearInterval(timer);
-}
-obj.innerText=Math.floor(start).toLocaleString();
-},20);
-}
-animateValue("views",3184000);
-animateValue("tips",247);
-animateValue("rankings",86);
-
-// ===== ADVANCED VAULT =====
-const CODES={
-basic:"ZEITER2026",
-elite:"EXECUTION",
-founder:"INNERSTRAT",
-easter:"STRATGOD"
-};
-
-function getWeeklyCode(){
-const now=new Date();
-const week=Math.floor(now.getTime()/(1000*60*60*24*7));
-return "Z"+week;
-}
-
-function unlockVault(){
-const input=document.getElementById("vaultCode").value.trim();
-const message=document.getElementById("vaultMessage");
-let tier=null;
-
-if(input===CODES.basic) tier="Basic";
-if(input===CODES.elite) tier="Elite";
-if(input===CODES.founder) tier="Founder";
-if(input===CODES.easter) tier="Easter";
-if(input===getWeeklyCode()) tier="Weekly";
-
-if(tier){
-document.body.style.transition="0.3s";
-document.body.style.background="#001f1f";
-setTimeout(()=>{document.body.style.background="#070b14";},300);
-
-let content=`<h3>💎 ${tier} Vault Access Granted</h3>
-<ul style="text-align:left;max-width:600px;margin:0 auto;">
-<li>🔥 Advanced Solo Routing</li>
-<li>📊 Profit Pattern Matrix</li>
-<li>🎯 Rank Acceleration Logic</li>
-<li>💰 Cash Optimization Cycles</li>
-<li>🧠 Strategic Buy Windows</li>
-</ul><br>
-<button class="button secondary" onclick="lockVault()">Lock Vault</button>`;
-
-if(tier==="Easter"){
-content=`<h3>👑 STRATEGY GOD MODE UNLOCKED</h3>
-<p style="color:#00f7ff;font-weight:bold;">You found the hidden tier.</p>
-<ul style="text-align:left;max-width:600px;margin:0 auto;">
-<li>🧠 Hidden Economic Exploit Mapping</li>
-<li>📈 Market Cycle Prediction Logic</li>
-<li>🔥 Stream Drop Multiplier Boost</li>
-<li>🎮 Elite Route Optimization Blueprint</li>
-</ul><br>
-<button class="button secondary" onclick="lockVault()">Lock Vault</button>`;
-}
-
-document.getElementById("vaultLocked").style.display="none";
-document.getElementById("vaultContent").style.display="block";
-document.getElementById("vaultContent").innerHTML=content;
-message.innerHTML="";
-}else{
-message.innerHTML="❌ Invalid Code";
-message.style.color="#ff4d4d";
-}
-}
-
-function lockVault(){
-document.getElementById("vaultLocked").style.display="block";
-document.getElementById("vaultContent").style.display="none";
-document.getElementById("vaultCode").value="";
-document.getElementById("vaultMessage").innerHTML="";
-}
 </script>
 
 </body>
