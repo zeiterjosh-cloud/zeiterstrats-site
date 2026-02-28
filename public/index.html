@@ -397,3 +397,149 @@ animate();
 
 </body>
 </html>
+/* =====================================================
+   ZEITER OS — ADVANCED LAYER ADD-ON
+   (Does NOT replace anything)
+===================================================== */
+
+/* ================= ACHIEVEMENT POPUPS ================= */
+
+function showAchievementPopup(text){
+let popup = document.createElement("div");
+popup.innerText = "🏆 " + text;
+popup.style.position = "fixed";
+popup.style.bottom = "20px";
+popup.style.right = "20px";
+popup.style.background = "#111827";
+popup.style.padding = "12px 18px";
+popup.style.borderRadius = "8px";
+popup.style.boxShadow = "0 0 20px rgba(122,92,255,0.6)";
+popup.style.opacity = "0";
+popup.style.transition = "all 0.4s ease";
+popup.style.zIndex = "9999";
+document.body.appendChild(popup);
+
+setTimeout(()=> popup.style.opacity="1",50);
+setTimeout(()=>{
+popup.style.opacity="0";
+setTimeout(()=> popup.remove(),400);
+},3000);
+}
+
+/* Hook into existing achievement check */
+const originalCheckAchievements = checkAchievements;
+
+checkAchievements = function(){
+let before = [...user.achievements];
+originalCheckAchievements();
+let after = user.achievements;
+
+after.forEach(id=>{
+if(!before.includes(id)){
+let achievement = achievementList.find(a=>a.id===id);
+if(achievement){
+showAchievementPopup(achievement.name + " Unlocked");
+}
+}
+});
+};
+
+/* ================= FOUNDER SECRET ACHIEVEMENT ================= */
+
+if(user.founder && !user.achievements.includes("founder_secret")){
+user.achievements.push("founder_secret");
+showAchievementPopup("Founder Status Activated");
+save();
+}
+
+/* ================= GLOBAL RANK PERCENTILE ================= */
+
+function calculatePercentile(){
+let board = JSON.parse(localStorage.getItem("zeiterLeaderboard")) || [];
+if(board.length <= 1) return 100;
+
+board.sort((a,b)=>b.score-a.score);
+let rank = board.findIndex(p=>p.id==="localUser")+1;
+let percentile = Math.round((1 - (rank/board.length)) * 100);
+
+return percentile;
+}
+
+function renderPercentile(){
+let panel = document.getElementById("leaderboard");
+let percent = calculatePercentile();
+
+let div = document.createElement("div");
+div.style.marginTop = "10px";
+div.style.opacity = "0.7";
+div.innerText = "Rank Percentile: Top " + percent + "%";
+panel.appendChild(div);
+}
+
+setTimeout(renderPercentile,200);
+
+/* ================= ELITE SEASON BONUS ================= */
+
+function applyEliteSeasonBoost(){
+if(user.elite){
+let boost = Math.floor(user.seasonScore * 0.1);
+user.seasonScore += boost;
+}
+}
+
+applyEliteSeasonBoost();
+
+/* ================= PROFILE CARD SYSTEM ================= */
+
+function renderProfileCard(){
+
+if(!document.getElementById("profileCard")){
+let container = document.createElement("div");
+container.id="profileCard";
+container.className="panel";
+container.style.marginTop="20px";
+
+container.innerHTML=`
+<h3>Your Profile</h3>
+<div>Email: ${user.email || "Local User"}</div>
+<div>Score: ${user.score}</div>
+<div>Season Score: ${user.seasonScore}</div>
+<div>Visits: ${user.visits}</div>
+<div>Streak: ${user.streak}</div>
+<div>Elite: ${user.elite ? "Yes" : "No"}</div>
+`;
+
+document.querySelector("#leaderboard").parentNode.appendChild(container);
+}
+}
+
+setTimeout(renderProfileCard,300);
+
+/* ================= MULTIPLAYER READY STRUCTURE ================= */
+
+async function syncToSupabase(){
+if(typeof supabase !== "undefined" && currentUser){
+await supabase
+.from("leaderboard")
+.upsert({
+id: currentUser.id,
+score: user.seasonScore,
+tier: getTier(user.score)
+});
+}
+}
+
+/* ================= ELITE VISUAL PULSE ================= */
+
+if(user.elite){
+document.body.style.transition="background 1s ease";
+document.body.style.background="linear-gradient(180deg,#050714,#0b0f2a)";
+}
+
+/* ================= MONTHLY SEASON BADGE ================= */
+
+if(user.seasonScore > 1000 && !user.achievements.includes("season_dominator")){
+user.achievements.push("season_dominator");
+showAchievementPopup("Season Dominator");
+save();
+}
