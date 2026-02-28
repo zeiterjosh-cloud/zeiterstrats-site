@@ -1,167 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZEITERSTRATS</title>
-
-<style>
-body{
-margin:0;
-font-family:Arial, sans-serif;
-background:#070b14;
-color:#e6ffff;
-text-align:center;
-}
-
-.hero{
-padding:80px 20px;
-}
-
-h1{
-font-size:48px;
-margin-bottom:10px;
-}
-
-.tagline{
-opacity:0.7;
-margin-bottom:30px;
-}
-
-.cta{
-padding:14px 24px;
-margin:10px;
-border:none;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.live{
-background:#00ff88;
-color:#000;
-box-shadow:0 0 15px #00ff88;
-}
-
-.offline{
-background:#444;
-color:#fff;
-}
-
-.section{
-padding:60px 20px;
-}
-
-.card{
-background:#111827;
-padding:20px;
-margin:20px auto;
-max-width:600px;
-border-radius:12px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="hero">
-<h1>ZEITERSTRATS</h1>
-<div class="tagline">Strategy > Luck. Execution > Emotion.</div>
-
-<div id="liveStatus">Checking stream status...</div>
-<div id="viewerCount"></div>
-
-<button id="twitchBtn" class="cta offline">Loading...</button>
-<button class="cta" onclick="window.open('https://youtube.com/@ZEITERSTRATS')">
-Latest Video
-</button>
-</div>
-
 <script>
-
-// ===== TWITCH CONFIG =====
 const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm";
-const ACCESS_TOKEN = "k2hruve5k56nn9qztu4q146di9avf1";
+const CLIENT_SECRET = "PASTE_CLIENT_SECRET_HERE"; 
 const CHANNEL_NAME = "zeiterstrats";
 
-// ===== TWITCH LIVE CHECK =====
+let appToken = null;
+
+async function getAppToken(){
+const res = await fetch("https://id.twitch.tv/oauth2/token",{
+method:"POST",
+headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+body:`client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`
+});
+const data = await res.json();
+appToken = data.access_token;
+}
+
 async function checkLive(){
+
+if(!appToken) await getAppToken();
 
 try{
 
-// Get user ID
 const userRes = await fetch(
 `https://api.twitch.tv/helix/users?login=${CHANNEL_NAME}`,{
 headers:{
 "Client-ID": CLIENT_ID,
-"Authorization": "Bearer " + ACCESS_TOKEN
+"Authorization": "Bearer " + appToken
 }
 });
 
 const userData = await userRes.json();
-
-if(!userData.data || userData.data.length === 0){
-document.getElementById("liveStatus").innerText="Channel not found.";
+if(!userData.data || userData.data.length===0){
+document.getElementById("liveStatus").innerText="User lookup failed.";
 return;
 }
 
 const userId = userData.data[0].id;
 
-// Check stream status
 const streamRes = await fetch(
 `https://api.twitch.tv/helix/streams?user_id=${userId}`,{
 headers:{
 "Client-ID": CLIENT_ID,
-"Authorization": "Bearer " + ACCESS_TOKEN
+"Authorization": "Bearer " + appToken
 }
 });
 
 const streamData = await streamRes.json();
 
-const statusEl = document.getElementById("liveStatus");
-const viewerEl = document.getElementById("viewerCount");
-const btn = document.getElementById("twitchBtn");
+const statusEl=document.getElementById("liveStatus");
+const viewerEl=document.getElementById("viewerCount");
+const btn=document.getElementById("twitchBtn");
 
-if(streamData.data.length > 0){
-
-const viewers = streamData.data[0].viewer_count;
-
-statusEl.innerHTML = "🟢 LIVE RIGHT NOW";
-viewerEl.innerHTML = `👥 ${viewers} watching`;
-
-btn.innerText = "🔥 WATCH LIVE";
-btn.classList.remove("offline");
+if(streamData.data.length>0){
+const viewers=streamData.data[0].viewer_count;
+statusEl.innerHTML="🟢 LIVE RIGHT NOW";
+viewerEl.innerHTML=`👥 ${viewers} watching`;
+btn.innerText="🔥 WATCH LIVE";
 btn.classList.add("live");
-btn.onclick = ()=>{
-window.open("https://twitch.tv/"+CHANNEL_NAME);
-};
-
+btn.onclick=()=>window.open("https://twitch.tv/"+CHANNEL_NAME);
 }else{
-
-statusEl.innerHTML = "🔴 Offline";
-viewerEl.innerHTML = "";
-
-btn.innerText = "Follow on Twitch";
-btn.classList.remove("live");
-btn.classList.add("offline");
-btn.onclick = ()=>{
-window.open("https://twitch.tv/"+CHANNEL_NAME);
-};
-
+statusEl.innerHTML="🔴 Offline";
+viewerEl.innerHTML="";
+btn.innerText="Follow on Twitch";
+btn.onclick=()=>window.open("https://twitch.tv/"+CHANNEL_NAME);
 }
 
-}catch(error){
-document.getElementById("liveStatus").innerText="Stream status unavailable.";
-console.error(error);
+}catch(err){
+document.getElementById("liveStatus").innerText="API Error.";
+console.error(err);
+}
 }
 
-}
-
-// Check every 60 seconds
 checkLive();
 setInterval(checkLive,60000);
-
 </script>
-
-</body>
-</html>
