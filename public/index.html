@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,70 +8,16 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#0a0a0f;
-  color:#e6ffff;
-  text-align:center;
-}
-header{padding:100px 20px 60px;}
-h1{
-  font-size:64px;
-  letter-spacing:6px;
-  color:#00f7ff;
-  text-shadow:0 0 25px #00f7ff;
-}
-.section{padding:80px 20px;max-width:1100px;margin:auto;}
-.panel{
-  backdrop-filter:blur(14px);
-  background:rgba(20,20,30,0.6);
-  border:1px solid rgba(0,247,255,0.3);
-  padding:35px;
-  margin:30px 0;
-  border-radius:16px;
-  transition:0.3s;
-}
-.panel:hover{transform:translateY(-6px);}
-.btn{
-  display:inline-block;
-  margin:10px;
-  padding:12px 28px;
-  border-radius:8px;
-  border:1px solid #00f7ff;
-  color:#00f7ff;
-  text-decoration:none;
-  cursor:pointer;
-  transition:0.3s;
-}
-.btn:hover{background:#00f7ff;color:black;}
-.bar{
-  width:70%;
-  height:16px;
-  background:#111;
-  margin:20px auto;
-  border-radius:12px;
-  overflow:hidden;
-}
-.fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#00f7ff,#7a5cff);
-  transition:1s ease;
-}
-.hidden{display:none;}
-.pro-mode{
-  background:#050509 !important;
-  color:#7a5cff !important;
-}
-input{
-  padding:10px;
-  margin:6px;
-  border-radius:6px;
-  border:none;
-}
-footer{padding:60px;opacity:0.4;}
+body{margin:0;font-family:sans-serif;background:#0a0a0f;color:#e6ffff;text-align:center}
+header{padding:80px 20px}
+h1{font-size:48px;color:#00f7ff;text-shadow:0 0 20px #00f7ff}
+.section{max-width:1000px;margin:auto;padding:60px 20px}
+.panel{background:rgba(20,20,30,0.6);border:1px solid #00f7ff;padding:30px;margin:25px 0;border-radius:12px}
+.btn{padding:10px 20px;border:1px solid #00f7ff;background:none;color:#00f7ff;cursor:pointer}
+.btn:hover{background:#00f7ff;color:black}
+.hidden{display:none}
+.bar{width:70%;height:14px;background:#111;margin:20px auto;border-radius:10px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#00f7ff,#7a5cff)}
 </style>
 </head>
 
@@ -79,319 +25,141 @@ footer{padding:60px;opacity:0.4;}
 
 <header>
 <h1>ZEITERSTRATS</h1>
-<p>High-Level Strategy & Optimization</p>
-
-<div id="liveStatus">Checking live status...</div>
-<div id="viewerCount"></div>
-
-<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">
-Watch Live
-</a>
-
-<button class="btn" onclick="togglePro()">Pro Mode</button>
+<p>High-Level Strategy</p>
+<div id="liveStatus">Offline</div>
+<a href="https://twitch.tv/zeiterstrats" target="_blank" class="btn">Watch Live</a>
 </header>
 
 <div class="section">
 
-<!-- Earnings -->
 <div class="panel">
-<h2>Performance Overview</h2>
+<h2>Operations Overview</h2>
 <div>Total Earnings: $<span id="earnings">0</span></div>
-<div>Efficiency Rating: 94%</div>
-<div>Current Rank: 15</div>
+<div>Streak: <span id="streak"></span> days</div>
 </div>
 
-<!-- Streak -->
-<div class="panel">
-<h2>Consistency Tracker</h2>
-<div>Streaming Streak: <span id="streak"></span> Days 🔥</div>
-</div>
-
-<!-- Logs -->
-<div class="panel">
-<h2>Performance Log</h2>
-<div id="logContainer"></div>
-</div>
-
-<!-- MEMBER LOGIN -->
 <div class="panel">
 <h2>Member Access</h2>
-
 <input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-<br>
-
+<input type="password" id="password" placeholder="Password"><br>
 <button class="btn" onclick="register()">Register</button>
 <button class="btn" onclick="login()">Login</button>
 <button class="btn" onclick="logout()">Logout</button>
-
 <div id="memberStatus"></div>
+<button class="btn hidden" id="dashBtn" onclick="openDash()">Dashboard</button>
 </div>
 
-<!-- PREMIUM VAULT -->
 <div class="panel">
-<h2>Premium Strategy Vault 🔒</h2>
-<button class="btn" onclick="unlockVault()">Access Vault</button>
-
-<div id="vaultContent" class="hidden">
-<p>Advanced Rotation: Chain high-margin cycles.</p>
-<p>Elite Optimization: Sync passive income streams.</p>
+<h2>Optimization Vault</h2>
+<button class="btn" onclick="unlockVault()">Access</button>
+<div id="vault" class="hidden">
+<p>Advanced Rotation Stack</p>
+<p>Passive Sync Execution</p>
 </div>
 </div>
 
-<!-- DONATION GOAL -->
+<div class="panel hidden" id="dashboard">
+<h2>Operator Dashboard</h2>
+<div>Rank: <span id="rank"></span></div>
+<div>Visits: <span id="visits"></span></div>
+<div>Login Streak: <span id="loginStreak"></span></div>
+</div>
+
 <div class="panel">
-<h2>Upgrade the Stream</h2>
-<p id="upgradeText"></p>
+<h2>Upgrade Fund</h2>
 <div class="bar"><div id="goalFill" class="fill"></div></div>
-<div id="goalAmount"></div>
+<div id="goalText"></div>
 </div>
 
 </div>
-
-<footer>
-© 2026 ZEITERSTRATS
-</footer>
 
 <script>
 
-// === SUPABASE (unchanged) ===
 const supabase = window.supabase.createClient(
-  "YOUR_SUPABASE_URL",
-  "YOUR_ANON_KEY"
+"YOUR_SUPABASE_URL",
+"YOUR_ANON_KEY"
 );
 
-let currentUser = null;
-let visitCount = localStorage.getItem("visits") || 0;
-visitCount++;
-localStorage.setItem("visits", visitCount);
+let user=null;
+let visits=localStorage.getItem("visits")||0;
+visits++;
+localStorage.setItem("visits",visits);
 
-// === RANK SYSTEM ===
-function updateRank(){
-  let rank = "Observer";
-  if(visitCount > 5) rank = "Strategist";
-  if(visitCount > 15) rank = "Operator";
-  if(visitCount > 30) rank = "Elite";
-  if(visitCount > 50) rank = "Inner Circle";
-
-  document.getElementById("memberStatus").innerText += 
-    " | Rank: " + rank;
+function getRank(){
+if(visits>50)return"Inner Circle";
+if(visits>30)return"Elite";
+if(visits>15)return"Operator";
+if(visits>5)return"Strategist";
+return"Observer";
 }
 
-// === REGISTER ===
 async function register(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  const { error }=await supabase.auth.signUp({email,password});
-  if(error) alert(error.message);
-  else alert("Check your email.");
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+const{error}=await supabase.auth.signUp({email,password});
+if(error)alert(error.message);
+else alert("Check email");
 }
 
-// === LOGIN ===
 async function login(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  const { data,error }=
-    await supabase.auth.signInWithPassword({email,password});
-  if(error) alert(error.message);
-  else{
-    currentUser=data.user;
-    document.getElementById("memberStatus").innerText=
-    "Logged in as "+currentUser.email;
-    updateRank();
-  }
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+const{data,error}=await supabase.auth.signInWithPassword({email,password});
+if(error)alert(error.message);
+else{
+user=data.user;
+document.getElementById("memberStatus").innerText="Logged in";
+document.getElementById("dashBtn").classList.remove("hidden");
+}
 }
 
-// === SESSION CHECK ===
-async function checkSession(){
-  const { data }=await supabase.auth.getUser();
-  if(data.user){
-    currentUser=data.user;
-    document.getElementById("memberStatus").innerText=
-    "Logged in as "+currentUser.email;
-    updateRank();
-  }
-}
-checkSession();
-
-// === VAULT LOCK ===
-function unlockVault(){
-  if(currentUser)
-    document.getElementById("vaultContent")
-      .classList.remove("hidden");
-  else alert("Login required.");
-}
-
-// === SESSION ROI ENGINE ===
-let sessionMinutes = 0;
-let earningsPerHour = 2800000;
-
-setInterval(()=>{
-  sessionMinutes++;
-  let projected =
-    (earningsPerHour/60)*sessionMinutes;
-  document.getElementById("roiEngine").innerText =
-    "Session: "+sessionMinutes+"m | Projected: $"+
-    Math.floor(projected).toLocaleString();
-},60000);
-
-// === SOCIAL PROOF ROTATOR ===
-const proofMessages=[
-"3 Operators unlocked vault today",
-"5 Strategists upgraded this week",
-"12 Observers joined"
-];
-let proofIndex=0;
-setInterval(()=>{
-  document.getElementById("socialProof").innerText=
-  proofMessages[proofIndex];
-  proofIndex=(proofIndex+1)%proofMessages.length;
-},4000);
-
-// === COUNTDOWN ===
-function startCountdown(){
-  const target=new Date("March 15, 2026 20:00:00");
-  setInterval(()=>{
-    const now=new Date();
-    const diff=target-now;
-    const hours=Math.floor(diff/1000/60/60);
-    document.getElementById("countdown").innerText=
-      "Next Stream In: "+hours+"h";
-  },1000);
-}
-startCountdown();
-
-// === OPERATOR MODE SECRET ===
-document.addEventListener("keydown",function(e){
-  if(e.key==="o"){
-    let code=prompt("Enter command:");
-    if(code==="optimize"){
-      document.body.style.background="#050509";
-      document.body.style.color="#7a5cff";
-    }
-  }
-});
-
-</script>
-
-// SUPABASE CONNECT
-const supabase = window.supabase.createClient(
-  "https://jklcxvrwqyxkfpmpkwbv.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprbGN4dnJ3cXl4a2ZwbXBrd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNDk4NTQsImV4cCI6MjA4NzgyNTg1NH0.swm1GeFu9iCzi_2XeskrESgz2rR2bVJlA7P3g0XVPyM"
-);
-
-let currentUser = null;
-
-// REGISTER
-async function register(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  const { error } = await supabase.auth.signUp({ email,password });
-  if(error) alert(error.message);
-  else alert("Check your email to confirm.");
-}
-
-// LOGIN
-async function login(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  const { data,error }=await supabase.auth.signInWithPassword({email,password});
-  if(error) alert(error.message);
-  else{
-    currentUser=data.user;
-    document.getElementById("memberStatus").innerText=
-    "Logged in as "+currentUser.email;
-  }
-}
-
-// LOGOUT
 async function logout(){
-  await supabase.auth.signOut();
-  location.reload();
+await supabase.auth.signOut();
+location.reload();
 }
 
-// SESSION CHECK
-async function checkSession(){
-  const { data }=await supabase.auth.getUser();
-  if(data.user){
-    currentUser=data.user;
-    document.getElementById("memberStatus").innerText=
-    "Logged in as "+currentUser.email;
-  }
+async function check(){
+const{data}=await supabase.auth.getUser();
+if(data.user){
+user=data.user;
+document.getElementById("memberStatus").innerText="Logged in";
+document.getElementById("dashBtn").classList.remove("hidden");
 }
-checkSession();
+}
+check();
 
-// VAULT LOCK
 function unlockVault(){
-  if(currentUser)
-    document.getElementById("vaultContent").classList.remove("hidden");
-  else alert("Login required.");
+if(user)document.getElementById("vault").classList.remove("hidden");
+else alert("Login required");
 }
 
-// EARNINGS ANIMATION
-let earningsTarget=318400000;
-let earningsCurrent=0;
-function animateEarnings(){
- if(earningsCurrent<earningsTarget){
-  earningsCurrent+=2500000;
-  document.getElementById("earnings").innerText=
-   earningsCurrent.toLocaleString();
-  requestAnimationFrame(animateEarnings);
- }
+function openDash(){
+document.getElementById("dashboard").classList.remove("hidden");
+document.getElementById("rank").innerText=getRank();
+document.getElementById("visits").innerText=visits;
+document.getElementById("loginStreak").innerText=1;
 }
-animateEarnings();
 
-// STREAK
-let lastStreamDate=new Date("2026-03-10");
-let today=new Date();
-let diff=Math.ceil(Math.abs(today-lastStreamDate)/(1000*60*60*24));
+let target=318400000;
+let current=0;
+function animate(){
+if(current<target){
+current+=2500000;
+document.getElementById("earnings").innerText=current.toLocaleString();
+requestAnimationFrame(animate);
+}}
+animate();
+
+let last=new Date("2026-03-10");
+let now=new Date();
+let diff=Math.ceil(Math.abs(now-last)/(1000*60*60*24));
 document.getElementById("streak").innerText=diff;
 
-// LOGS
-const sessions=[
- {date:"3/10",profit:3400000,time:"1h 42m"},
- {date:"3/08",profit:2900000,time:"1h 30m"},
- {date:"3/06",profit:4100000,time:"2h 05m"}
-];
-function renderLogs(){
- const container=document.getElementById("logContainer");
- sessions.forEach(s=>{
-  const div=document.createElement("div");
-  div.style.margin="8px 0";
-  div.innerHTML=`${s.date} – $${s.profit.toLocaleString()} – ${s.time}`;
-  container.appendChild(div);
- });
-}
-renderLogs();
-
-// DONATION GOAL
-let currentRaised=420;
-let monthlyGoal=1000;
-function updateGoal(){
- let percent=(currentRaised/monthlyGoal)*100;
- document.getElementById("goalFill").style.width=percent+"%";
- document.getElementById("goalAmount").innerText=
- `$${currentRaised} / $${monthlyGoal} Monthly Goal`;
-
- if(percent<50)
-  document.getElementById("upgradeText").innerText=
-  "Next Upgrade: 4K Camera";
- else if(percent<90)
-  document.getElementById("upgradeText").innerText=
-  "Next Upgrade: Custom Graphics";
- else
-  document.getElementById("upgradeText").innerText=
-  "Upgrade Almost Complete 🔥";
-}
-updateGoal();
-
-// PRO MODE
-function togglePro(){
- document.body.classList.toggle("pro-mode");
-}
-
-// LIVE STATUS PLACEHOLDER
-document.getElementById("liveStatus").innerText="Currently Offline";
+let raised=420;
+let goal=1000;
+let percent=(raised/goal)*100;
+document.getElementById("goalFill").style.width=percent+"%";
+document.getElementById("goalText").innerText="$"+raised+" / $"+goal;
 
 </script>
 
