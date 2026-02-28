@@ -1,4 +1,36 @@
 <script>
+const channel = "zeiterstrats";
+
+async function checkLive() {
+  try {
+    const res = await fetch(`https://decapi.me/twitch/uptime/${channel}`);
+    const text = await res.text();
+
+    const statusEl = document.getElementById("liveStatus");
+    const btn = document.getElementById("twitchBtn");
+
+    if (!statusEl || !btn) return;
+
+    if (text.toLowerCase().includes("offline")) {
+      statusEl.innerHTML = "🔴 Offline";
+      btn.innerText = "Follow on Twitch";
+      btn.className = "cta offline";
+      btn.onclick = () => window.open("https://twitch.tv/" + channel);
+    } else {
+      statusEl.innerHTML = "🟢 LIVE NOW";
+      btn.innerText = "🔥 Watch Live";
+      btn.className = "cta live";
+      btn.onclick = () => window.open("https://twitch.tv/" + channel);
+    }
+
+  } catch (err) {
+    console.log("API fallback");
+    document.getElementById("liveStatus").innerHTML = "Stream status unavailable.";
+  }
+}
+
+checkLive();
+</script>
 const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm";
 const CLIENT_SECRET = "62t19tqfi57iuhzc6oxjfzilzg16hm"; 
 const CHANNEL_NAME = "zeiterstrats";
