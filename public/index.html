@@ -30,96 +30,22 @@ animation:pulseGlow 6s ease-in-out infinite;
 100%{text-shadow:0 0 20px rgba(0,247,255,0.5);}
 }
 
-.layer{
-padding:100px 20px;
-}
-
+.layer{padding:100px 20px;}
 .layer-dark{background:#070b14;}
 .layer-soft{background:#0c111c;}
-.layer-glass{background:linear-gradient(to bottom,#0c111c,#070b14);}
 
-.section-inner{
-max-width:1100px;
-margin:auto;
-text-align:center;
-}
+.section-inner{max-width:1000px;margin:auto;text-align:center;}
 
-.panel{
-background:rgba(15,20,30,0.6);
-padding:30px;
-border-radius:16px;
-margin-bottom:20px;
-transition:0.4s;
-}
-
-.panel:hover{
-transform:translateY(-6px);
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-}
-
-.btn{
-padding:12px 24px;
-border:1px solid #00f7ff;
-background:none;
-color:#00f7ff;
-cursor:pointer;
-border-radius:8px;
-margin:6px;
-transition:0.3s;
-}
-
-.btn:hover{
+button{
+padding:12px 18px;
+margin:8px;
+border:none;
+border-radius:6px;
 background:#00f7ff;
 color:#000;
+font-weight:bold;
+cursor:pointer;
 }
-
-.btn-pro{
-border:1px solid #7a5cff;
-color:#7a5cff;
-}
-
-.btn-pro:hover{
-background:#7a5cff;
-color:#000;
-}
-
-.bar{
-width:80%;
-height:16px;
-background:#111;
-margin:20px auto;
-border-radius:12px;
-overflow:hidden;
-}
-
-.fill{
-height:100%;
-width:0;
-background:linear-gradient(90deg,#00f7ff,#7a5cff);
-transition:width 1.5s ease;
-}
-
-.blur-lock{
-filter:blur(6px);
-pointer-events:none;
-opacity:0.6;
-}
-
-.founder-badge{
-display:inline-block;
-padding:6px 14px;
-background:linear-gradient(90deg,#7a5cff,#00f7ff);
-border-radius:20px;
-font-size:12px;
-margin-top:10px;
-}
-
-.hidden{display:none;}
 
 input{
 padding:10px;
@@ -129,6 +55,15 @@ border:1px solid #00f7ff;
 color:#fff;
 border-radius:6px;
 }
+
+.panel{
+background:#111827;
+padding:20px;
+margin:15px 0;
+border-radius:10px;
+}
+
+.hidden{display:none;}
 
 footer{
 padding:40px;
@@ -144,7 +79,7 @@ opacity:0.6;
 <!-- HERO -->
 <section class="layer layer-dark">
 <div class="section-inner">
-<h1 id="mainTitle">ZEITERSTRATS</h1>
+<h1>ZEITERSTRATS</h1>
 <p id="rotatingQuote"></p>
 </div>
 </section>
@@ -152,218 +87,89 @@ opacity:0.6;
 <!-- PERFORMANCE -->
 <section class="layer layer-soft">
 <div class="section-inner">
-
 <h2>Performance Overview</h2>
 
-<div class="grid">
-
 <div class="panel">
-<h3>Total Earnings</h3>
-<div>$<span id="earnings">0</span></div>
+<div>Earnings: $<span id="earnings">0</span></div>
+<div id="engagementLevel"></div>
 </div>
 
-<div class="panel">
-<h3>Performance Tier</h3>
-<div id="tierName"></div>
-
-<div class="bar">
-<div id="tierFill" class="fill"></div>
+<div class="panel" id="leaderboard">
+<h3>Leaderboard</h3>
+<div id="rankInfo"></div>
 </div>
 
-<div id="tierProgressText"></div>
-</div>
-
-</div>
 </div>
 </section>
 
-<!-- FOUNDER SECTION -->
+<!-- LOGIN PANEL -->
 <section class="layer layer-dark">
 <div class="section-inner">
-<h2>Founding Members</h2>
 
-<div class="panel">
-<p>Early supporters receive permanent Founder status.</p>
-<p id="founderCount"></p>
-<div id="founderBadgeArea"></div>
-</div>
+<h2>Member Access</h2>
+
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<br>
+
+<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+
+<p id="memberStatus"></p>
+
 </div>
 </section>
 
-<!-- DASHBOARD -->
+<!-- VAULT -->
 <section class="layer layer-soft">
 <div class="section-inner">
-<h2>Member Dashboard</h2>
+<h2>Strategy Vault</h2>
+<button onclick="unlockVault()">Unlock Vault</button>
 
-<div id="dashboardLocked">
-<p>Login to access your dashboard.</p>
-</div>
-
-<div id="dashboardUnlocked" class="hidden">
-
-<div class="panel">
-<h3>Welcome</h3>
-<p id="memberEmail"></p>
-<p id="engagementLevel"></p>
-</div>
-
-<div class="panel">
-<h3>Pro Strategy Vault</h3>
-
-<div id="vaultContent" class="blur-lock">
-<p>Advanced routing systems</p>
-<p>Execution frameworks</p>
-<p>Scaling models</p>
-</div>
-
-<br>
-<button class="btn-pro btn" onclick="unlockVault()">Unlock Pro</button>
-
-</div>
-
-</div>
-
-<br>
-
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password"><br>
-
-<button class="btn" onclick="register()">Register</button>
-<button class="btn" onclick="login()">Login</button>
-<button class="btn" onclick="logout()">Logout</button>
-
-</div>
-</section>
-
-<!-- EARLY ACCESS -->
-<section class="layer layer-dark">
-<div class="section-inner">
-<h2>Early Access Drops</h2>
-
-<div class="panel">
-<p>• Advanced Risk Model v1.2</p>
-<p>• Execution Heatmap Beta</p>
-<p>• Performance Tracking v2.0</p>
-<p style="opacity:0.6;">Pro + Founders get early access.</p>
+<div id="vaultContent" class="hidden panel">
+<p>Exclusive breakdowns. Private money methods. Advanced optimization routes.</p>
 </div>
 
 </div>
 </section>
 
 <footer>
-© 2026 ZEITERSTRATS | Build v6 | Engineered Platform
+© 2026 ZEITERSTRATS | Engineered Platform
 </footer>
 
 <script>
 
-/* ===== SUPABASE ===== */
+/* ================= SUPABASE INIT ================= */
 
 const supabase = window.supabase.createClient(
-"YOUR_SUPABASE_URL",
-"YOUR_ANON_KEY"
+"https://YOUR_PROJECT_ID.supabase.co",
+"YOUR_PUBLIC_ANON_KEY"
 );
 
-let currentUser=null;
+let currentUser = null;
 
-/* ===== QUOTES ===== */
-
-const quotes=[
-"Consistency compounds.",
-"Precision beats impulse.",
-"Structured growth scales.",
-"Smart execution wins.",
-"Performance is engineered."
-];
-
-document.getElementById("rotatingQuote").innerText =
-quotes[Math.floor(Math.random()*quotes.length)];
-
-/* ===== TIER SYSTEM ===== */
-
-let visits=localStorage.getItem("visits")||0;
-visits++;
-localStorage.setItem("visits",visits);
-
-function calculateTier(){
-if(visits>50)return{name:"Elite",progress:100};
-if(visits>25)return{name:"Advanced",progress:75};
-if(visits>10)return{name:"Strategic",progress:50};
-return{name:"Observer",progress:20};
-}
-
-const tier=calculateTier();
-document.getElementById("tierName").innerText=tier.name;
-document.getElementById("tierFill").style.width=tier.progress+"%";
-document.getElementById("tierProgressText").innerText=
-tier.progress+"% to next tier";
-
-/* ===== FOUNDER SYSTEM ===== */
-
-let founderMax=50;
-let founderList=JSON.parse(localStorage.getItem("founders"))||[];
-document.getElementById("founderCount").innerText=
-"Spots Remaining: "+(founderMax-founderList.length);
-
-function checkFounder(email){
-if(founderList.includes(email)){
-document.getElementById("founderBadgeArea").innerHTML=
-'<div class="founder-badge">Founding Member</div>';
-document.getElementById("mainTitle").innerHTML=
-'ZEITERSTRATS <span style="color:#7a5cff;">★</span>';
-}
-}
-
-function registerFounder(email){
-if(founderList.length<founderMax && !founderList.includes(email)){
-founderList.push(email);
-localStorage.setItem("founders",JSON.stringify(founderList));
-}
-}
-
-/* ===== ENGAGEMENT ===== */
-
-let timeOnSite=0;
-setInterval(()=>{
-timeOnSite++;
-},1000);
-
-function getEngagement(){
-if(timeOnSite>300)return"Highly Engaged";
-if(timeOnSite>120)return"Active";
-return"New Visitor";
-}
-
-/* ===== AUTH ===== */
+/* ================= AUTH ================= */
 
 async function register(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 const { error }=await supabase.auth.signUp({email,password});
-if(error)alert(error.message);
-else{
-registerFounder(email);
-alert("Check email to confirm.");
-}
+if(error) alert(error.message);
+else alert("Check your email to confirm.");
 }
 
 async function login(){
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 const { data,error }=await supabase.auth.signInWithPassword({email,password});
-if(error)alert(error.message);
+if(error) alert(error.message);
 else{
 currentUser=data.user;
-unlockDashboard();
-checkFounder(currentUser.email);
+document.getElementById("memberStatus").innerText="Logged in as "+currentUser.email;
+checkAchievements();
 }
-}
-
-function unlockDashboard(){
-document.getElementById("dashboardLocked").classList.add("hidden");
-document.getElementById("dashboardUnlocked").classList.remove("hidden");
-document.getElementById("memberEmail").innerText=currentUser.email;
-document.getElementById("engagementLevel").innerText=
-"Engagement: "+getEngagement();
 }
 
 async function logout(){
@@ -371,27 +177,87 @@ await supabase.auth.signOut();
 location.reload();
 }
 
-/* ===== VAULT ===== */
+/* ================= VAULT ================= */
 
 function unlockVault(){
 if(currentUser){
-document.getElementById("vaultContent").classList.remove("blur-lock");
+document.getElementById("vaultContent").classList.remove("hidden");
 }else{
 alert("Login required.");
 }
 }
 
-/* ===== EARNINGS ===== */
+/* ================= EARNINGS ANIMATION ================= */
 
 let target=318400000;
 let current=0;
+
 function animate(){
 if(current<target){
 current+=3000000;
 document.getElementById("earnings").innerText=current.toLocaleString();
 requestAnimationFrame(animate);
-}}
+}
+}
 animate();
+
+/* ================= ENGAGEMENT ================= */
+
+function getEngagement(){
+let level=Math.floor(current/10000000);
+return level+" pts";
+}
+
+document.getElementById("engagementLevel").innerText=
+"Engagement: "+getEngagement();
+
+/* ================= ACHIEVEMENTS ================= */
+
+let user={achievements:[]};
+let achievementList=[
+{id:"firstLogin",name:"First Login"},
+{id:"vaultUnlock",name:"Vault Access"}
+];
+
+function checkAchievements(){
+if(currentUser && !user.achievements.includes("firstLogin")){
+user.achievements.push("firstLogin");
+showAchievementPopup("First Login Unlocked");
+}
+}
+
+function showAchievementPopup(text){
+let popup=document.createElement("div");
+popup.innerText="🏆 "+text;
+popup.style.position="fixed";
+popup.style.bottom="20px";
+popup.style.right="20px";
+popup.style.background="#111827";
+popup.style.padding="12px 18px";
+popup.style.borderRadius="8px";
+popup.style.boxShadow="0 0 20px rgba(122,92,255,0.6)";
+popup.style.opacity="0";
+popup.style.transition="all 0.4s ease";
+popup.style.zIndex="9999";
+document.body.appendChild(popup);
+setTimeout(()=>popup.style.opacity="1",50);
+setTimeout(()=>{
+popup.style.opacity="0";
+setTimeout(()=>popup.remove(),400);
+},3000);
+}
+
+/* ================= LEADERBOARD PERCENTILE ================= */
+
+function calculatePercentile(){
+let board=[{id:"localUser",score:current}];
+board.sort((a,b)=>b.score-a.score);
+let rank=board.findIndex(p=>p.id==="localUser")+1;
+return 100;
+}
+
+document.getElementById("rankInfo").innerText=
+"Rank Percentile: Top "+calculatePercentile()+"%";
 
 </script>
 
