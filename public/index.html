@@ -193,6 +193,78 @@ allowfullscreen>
 <footer>
 © 2026 ZEITERSTRATS
 </footer>
+<script>
 
+const prizes = [
+"🔥 Free Shoutout",
+"💰 VIP Role",
+"🎮 Play With Me",
+"❌ No Prize",
+"🔁 Spin Again",
+"🎁 Mystery Reward"
+];
+
+const wheel = document.getElementById("wheel");
+const resultText = document.getElementById("wheelResult");
+const spinBtn = document.getElementById("spinBtn");
+const timerText = document.getElementById("nextSpinTimer");
+
+function canSpinToday(){
+const lastSpin = localStorage.getItem("lastSpinDate");
+const today = new Date().toDateString();
+return lastSpin !== today;
+}
+
+function updateTimer(){
+if(canSpinToday()){
+timerText.innerText="";
+spinBtn.disabled=false;
+return;
+}
+
+spinBtn.disabled=true;
+
+const now = new Date();
+const tomorrow = new Date();
+tomorrow.setHours(24,0,0,0);
+const diff = tomorrow - now;
+
+const hours = Math.floor(diff/(1000*60*60));
+const minutes = Math.floor((diff/(1000*60))%60);
+
+timerText.innerText="Next spin available in "+hours+"h "+minutes+"m";
+}
+
+function spinWheel(){
+
+if(!canSpinToday()){
+updateTimer();
+return;
+}
+
+spinBtn.disabled=true;
+
+const randomIndex = Math.floor(Math.random()*prizes.length);
+const rotation = 360*5 + (randomIndex * 60);
+
+wheel.style.transform = "rotate("+rotation+"deg)";
+
+setTimeout(()=>{
+const prize = prizes[randomIndex];
+resultText.innerText="Result: " + prize;
+
+if(prize === "🔁 Spin Again"){
+spinBtn.disabled=false;
+}else{
+localStorage.setItem("lastSpinDate", new Date().toDateString());
+updateTimer();
+}
+},4000);
+}
+
+updateTimer();
+setInterval(updateTimer,60000);
+
+</script>
 </body>
 </html>
