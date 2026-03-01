@@ -5,7 +5,7 @@ const app = express();
 app.use(express.static("public"));
 
 const CLIENT_ID = "62t19tqfi57iuhzc6oxjfzilzg16hm";
-const ACCESS_TOKEN = "PASTE_YOUR_ACCESS_TOKEN_HERE";
+const ACCESS_TOKEN = "62t19tqfi57iuhzc6oxjfzilzg16hm";
 const TWITCH_USERNAME = "zeiterstrats";
 
 app.get("/api/live-status", async (req, res) => {
