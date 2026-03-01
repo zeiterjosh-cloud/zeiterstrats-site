@@ -1,275 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZEITERSTRATS</title>
+  <title>ZEITERSTRATS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body{
-margin:0;
-font-family:Arial, sans-serif;
-background: radial-gradient(circle at center, #14001f 0%, #070b14 60%, #000 100%);
-color:#ffffff;
-text-align:center;
-overflow-x:hidden;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0b0f14;
+      color: white;
+      overflow-x: hidden;
+    }
 
-/* ===== HERO ===== */
-.hero{
-padding:100px 20px 60px 20px;
-position:relative;
-}
+    /* Animated background grid */
+    body::before {
+      content: "";
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,255,200,0.05),
+        rgba(0,255,200,0.05) 1px,
+        transparent 1px,
+        transparent 40px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(0,255,200,0.05),
+        rgba(0,255,200,0.05) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+      animation: moveGrid 20s linear infinite;
+      z-index: -1;
+    }
 
-.logo{
-width:340px;
-max-width:85%;
-animation:logoPulse 5s ease-in-out infinite;
-transition:0.4s;
-}
+    @keyframes moveGrid {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-200px,-200px); }
+    }
 
-.logo:hover{
-transform:scale(1.06);
-filter:
-drop-shadow(0 0 25px #ff003c)
-drop-shadow(0 0 40px #7a00ff)
-drop-shadow(0 0 60px #ff003c);
-}
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
 
-@keyframes logoPulse{
-0%{filter:drop-shadow(0 0 15px #ff003c);}
-50%{filter:drop-shadow(0 0 40px #7a00ff);}
-100%{filter:drop-shadow(0 0 15px #ff003c);}
-}
+    h1 {
+      font-size: 64px;
+      letter-spacing: 4px;
+      background: linear-gradient(90deg,#00ffe0,#7a5cff,#ff00c8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-.brand-title{
-font-size:54px;
-margin-top:30px;
-background:linear-gradient(90deg,#ff003c,#7a00ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-letter-spacing:3px;
-}
+    .tagline {
+      font-size: 20px;
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
 
-.tagline{
-margin-top:12px;
-font-size:18px;
-color:#bbbbbb;
-}
+    .live-badge {
+      display: inline-block;
+      background: red;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
 
-/* Aura */
-.hero::before{
-content:"";
-position:absolute;
-width:600px;
-height:600px;
-background:radial-gradient(circle,#ff003c33,#7a00ff22,transparent 70%);
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-z-index:-1;
-filter:blur(80px);
-animation:auraShift 8s ease-in-out infinite alternate;
-}
+    .twitch-embed {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+    }
 
-@keyframes auraShift{
-0%{transform:translate(-50%,-50%) scale(1);}
-100%{transform:translate(-50%,-50%) scale(1.2);}
-}
+    iframe {
+      width: 90%;
+      max-width: 900px;
+      height: 500px;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,255,200,0.2);
+    }
 
-/* ===== STREAM ===== */
-.stream-section{
-padding:40px 20px;
-}
+    section {
+      padding: 60px 20px;
+      text-align: center;
+    }
 
-iframe{
-width:90%;
-max-width:900px;
-height:500px;
-border-radius:12px;
-box-shadow:0 0 30px rgba(255,0,60,0.3);
-}
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #00ffe0;
+    }
 
-/* ===== DAILY SPIN ===== */
-.wheel-section{
-padding:80px 20px;
-text-align:center;
-}
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: #7a5cff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin: 10px;
+      transition: 0.3s;
+    }
 
-.wheel-container{
-position:relative;
-display:inline-block;
-margin-top:20px;
-}
+    .btn:hover {
+      background: #5d3cff;
+      transform: translateY(-2px);
+    }
 
-.wheel{
-width:300px;
-height:300px;
-border-radius:50%;
-border:8px solid #111;
-background:conic-gradient(
-#ff003c 0deg 60deg,
-#7a00ff 60deg 120deg,
-#ff003c 120deg 180deg,
-#7a00ff 180deg 240deg,
-#ff003c 240deg 300deg,
-#7a00ff 300deg 360deg
-);
-transition:transform 4s cubic-bezier(0.33,1,0.68,1);
-}
+    .socials a {
+      margin: 0 15px;
+      color: #00ffe0;
+      text-decoration: none;
+      font-size: 18px;
+    }
 
-.wheel::after{
-content:"";
-position:absolute;
-top:-20px;
-left:50%;
-transform:translateX(-50%);
-width:0;
-height:0;
-border-left:15px solid transparent;
-border-right:15px solid transparent;
-border-bottom:25px solid white;
-}
+    input {
+      padding: 12px;
+      width: 250px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+    }
 
-#wheelResult{
-margin-top:25px;
-font-size:20px;
-font-weight:bold;
-}
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      opacity: 0.6;
+      font-size: 14px;
+    }
 
-#spinBtn{
-margin-top:20px;
-padding:12px 30px;
-border:none;
-background:#ff003c;
-color:white;
-font-weight:bold;
-border-radius:8px;
-cursor:pointer;
-transition:0.3s;
-}
-
-#spinBtn:hover{
-background:#7a00ff;
-}
-
-/* ===== FOOTER ===== */
-footer{
-margin-top:80px;
-padding:30px;
-color:#666;
-font-size:14px;
-}
-</style>
+    @media(max-width:768px){
+      h1 { font-size: 42px; }
+      iframe { height: 300px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="hero">
-  <img src="logo.png" class="logo" alt="ZEITERSTRATS Logo">
-  <h1 class="brand-title">ZEITERSTRATS</h1>
-  <p class="tagline">Strategy > Luck. Execution > Emotion.</p>
+<header>
+  <h1>ZEITERSTRATS</h1>
+  <div class="tagline">Strategic Intelligence. Competitive Precision. Elite Execution.</div>
+
+  <!-- Toggle this manually: remove if offline -->
+  <div class="live-badge">🔴 LIVE NOW</div>
+
+  <a href="https://twitch.tv/YOUR_TWITCH_NAME" target="_blank" class="btn">
+    Watch on Twitch
+  </a>
+</header>
+
+<div class="twitch-embed">
+  <iframe
+    src="https://player.twitch.tv/?channel=YOUR_TWITCH_NAME&parent=zeiterstrats-site-1.onrender.com"
+    frameborder="0"
+    allowfullscreen="true"
+    scrolling="no">
+  </iframe>
 </div>
 
-<div class="stream-section">
-<h2>Live Stream</h2>
+<section>
+  <h2>Stream Schedule</h2>
+  <p>Weekdays: 6:00 PM (EST)</p>
+  <p>Weekends: Rotating Times</p>
+</section>
 
-<iframe
-src="https://player.twitch.tv/?channel=zeiterstrats&parent=zeiterstrats-site-1.onrender.com"
-allowfullscreen>
-</iframe>
-
-</div>
-
-<div class="wheel-section">
-  <h2>🎡 Daily Spin</h2>
-
-  <div class="wheel-container">
-    <div class="wheel" id="wheel"></div>
-    <button onclick="spinWheel()" id="spinBtn">SPIN</button>
+<section>
+  <h2>Top Platforms</h2>
+  <div class="socials">
+    <a href="https://instagram.com/iron_grip216" target="_blank">Instagram</a>
+    <a href="https://youtube.com/@ZeiterStrats" target="_blank">YouTube</a>
+    <a href="https://tiktok.com/@josh222h00" target="_blank">TikTok</a>
   </div>
+</section>
 
-  <p id="wheelResult"></p>
-  <p id="nextSpinTimer" style="color:#aaa;"></p>
-</div>
+<section>
+  <h2>Join the Inner Circle</h2>
+  <p>Be first for stream alerts, drops, and strategy breakdowns.</p>
+  <input type="email" placeholder="Enter your email">
+  <button class="btn">Join</button>
+</section>
+
+<section>
+  <h2>Merch Coming Soon</h2>
+  <p>Premium ZEITERSTRATS apparel drops soon.</p>
+</section>
+
+<section>
+  <h2>Community</h2>
+  <a href="#" class="btn">Join Discord</a>
+  <a href="#" class="btn">Support the Stream</a>
+</section>
 
 <footer>
-© 2026 ZEITERSTRATS
+  © 2026 ZEITERSTRATS — Built for Strategic Dominance
 </footer>
-
-<script>
-const prizes = [
-"🔥 Free Shoutout",
-"💰 VIP Role",
-"🎮 Play With Me",
-"❌ No Prize",
-"🔁 Spin Again",
-"🎁 Mystery Reward"
-];
-
-function canSpinToday(){
-const lastSpin = localStorage.getItem("lastSpinDate");
-const today = new Date().toDateString();
-return lastSpin !== today;
-}
-
-function updateTimer(){
-const spinBtn = document.getElementById("spinBtn");
-const timerText = document.getElementById("nextSpinTimer");
-
-if(canSpinToday()){
-timerText.innerText="";
-spinBtn.disabled=false;
-return;
-}
-
-spinBtn.disabled=true;
-
-const now = new Date();
-const tomorrow = new Date();
-tomorrow.setHours(24,0,0,0);
-const diff = tomorrow - now;
-
-const hours = Math.floor(diff/(1000*60*60));
-const minutes = Math.floor((diff/(1000*60))%60);
-
-timerText.innerText="Next spin in "+hours+"h "+minutes+"m";
-}
-
-function spinWheel(){
-
-if(!canSpinToday()){
-updateTimer();
-return;
-}
-
-const wheel = document.getElementById("wheel");
-const resultText = document.getElementById("wheelResult");
-const spinBtn = document.getElementById("spinBtn");
-
-spinBtn.disabled=true;
-
-const randomIndex = Math.floor(Math.random()*prizes.length);
-const rotation = 360*5 + (randomIndex * 60);
-
-wheel.style.transform = "rotate("+rotation+"deg)";
-
-setTimeout(()=>{
-const prize = prizes[randomIndex];
-resultText.innerText="Result: " + prize;
-
-if(prize === "🔁 Spin Again"){
-spinBtn.disabled=false;
-}else{
-localStorage.setItem("lastSpinDate", new Date().toDateString());
-updateTimer();
-}
-},4000);
-}
-
-updateTimer();
-setInterval(updateTimer,60000);
-</script>
 
 </body>
 </html>
