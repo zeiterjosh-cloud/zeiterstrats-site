@@ -265,6 +265,26 @@
     observer.observe(section);
   });
 </script>
+<script>
+  async function checkLiveStatus() {
+    try {
+      const response = await fetch("/api/live-status");
+      const data = await response.json();
+      const statusDiv = document.getElementById("liveStatus");
 
+      if (data.live) {
+        statusDiv.innerHTML = "🔴 LIVE NOW — Streaming on Twitch";
+        statusDiv.style.color = "red";
+      } else {
+        statusDiv.innerHTML = "⚫ Currently Offline";
+        statusDiv.style.color = "gray";
+      }
+    } catch (error) {
+      console.error("Error checking live status");
+    }
+  }
+
+  checkLiveStatus();
+</script>
 </body>
 </html>
