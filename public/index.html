@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zeiterstrats - GTA Strategy Hub</title>
-<link rel="stylesheet" href="style.css">
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
+
+<canvas id="particles"></canvas>
 
 <header class="navbar">
   <div class="logo">ZS</div>
@@ -26,53 +30,44 @@
     <h1>ZEITERSTRATS</h1>
     <h2>Master GTA Online</h2>
     <p>Strategy · Luck · Execution · Emotion</p>
-    <button class="btn-primary">Watch Live</button>
+    <button class="btn-primary pulse">Watch Live</button>
   </div>
 
-  <div class="countdown-box">
+  <div class="countdown-box neon-border">
     <h3>Next Stream</h3>
     <div id="countdown">00:00:00</div>
   </div>
 </section>
 
 <section class="dashboard">
-  <div class="card">
+  <div class="card tilt neon-border">
     <h3>Viewers</h3>
-    <p class="big-number">1,209</p>
+    <p class="big-number counter" data-target="1209">0</p>
   </div>
-  <div class="card">
+
+  <div class="card tilt neon-border">
     <h3>Followers</h3>
-    <p class="big-number green">+37</p>
+    <p class="big-number green counter" data-target="37">0</p>
   </div>
-  <div class="card">
+
+  <div class="card tilt neon-border">
     <h3>Spins Today</h3>
-    <p class="big-number">428</p>
+    <p class="big-number counter" data-target="428">0</p>
   </div>
 </section>
 
 <section class="spin-section">
   <div class="wheel-container">
-    <div class="wheel" id="wheel">
-      <div class="center">SPIN</div>
-    </div>
-    <button class="btn-primary spin-btn">Spin Now</button>
+    <div class="wheel" id="wheel"></div>
+    <button class="btn-primary spin-btn">SPIN NOW</button>
   </div>
-</section>
-
-<section class="leaderboard">
-  <h2>Leaderboard</h2>
-  <ul>
-    <li>#1 GTAFan82 - 1450</li>
-    <li>#2 ShotCaller - 980</li>
-    <li>#3 xPlayer47 - 750</li>
-    <li>#4 AmyGTA - 620</li>
-  </ul>
 </section>
 
 <footer>
   © 2026 Zeiterstrats — The GTA Strategy Empire
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
