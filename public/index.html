@@ -1,73 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zeiterstrats - GTA Strategy Hub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Website Generator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="app">
+    <header>
+      <h1>AI Website Generator</h1>
+      <p>Generate multi-page websites from a sentence or template.</p>
+    </header>
 
-<canvas id="particles"></canvas>
+    <section class="templates">
+      <h2>Choose a template</h2>
+      <div class="template-grid">
+        <button class="template-card" data-template="gaming">
+          🎮 Gaming Website
+        </button>
+        <button class="template-card" data-template="business">
+          🏢 Business Website
+        </button>
+        <button class="template-card" data-template="portfolio">
+          📷 Portfolio
+        </button>
+        <button class="template-card" data-template="startup">
+          🚀 Startup Landing
+        </button>
+        <button class="template-card" data-template="store">
+          🛒 Online Store
+        </button>
+      </div>
+    </section>
 
-<header class="navbar">
-  <div class="logo">ZS</div>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">Stream</a>
-    <a href="#" class="active">Spin</a>
-    <a href="#">Quests</a>
-    <a href="#">Blog</a>
-  </nav>
-  <button class="btn-outline">Login</button>
-</header>
+    <section class="idea">
+      <h2>Or describe your website</h2>
+      <input id="ideaInput" placeholder="AI marketing platform for streamers">
+      <button id="generateFromIdea">Generate from idea</button>
+    </section>
 
-<section class="hero">
-  <div class="hero-content">
-    <h1>ZEITERSTRATS</h1>
-    <h2>Master GTA Online</h2>
-    <p>Strategy · Luck · Execution · Emotion</p>
-    <button class="btn-primary pulse">Watch Live</button>
+    <section class="controls">
+      <button id="generateSite">Generate Website</button>
+    </section>
+
+    <section class="preview-section">
+      <h2>Live Preview (index.html)</h2>
+      <iframe id="previewFrame"></iframe>
+    </section>
+
+    <section class="downloads">
+      <h2>Download Files</h2>
+      <div id="downloadLinks"></div>
+    </section>
   </div>
 
-  <div class="countdown-box neon-border">
-    <h3>Next Stream</h3>
-    <div id="countdown">00:00:00</div>
-  </div>
-</section>
-
-<section class="dashboard">
-  <div class="card tilt neon-border">
-    <h3>Viewers</h3>
-    <p class="big-number counter" data-target="1209">0</p>
-  </div>
-
-  <div class="card tilt neon-border">
-    <h3>Followers</h3>
-    <p class="big-number green counter" data-target="37">0</p>
-  </div>
-
-  <div class="card tilt neon-border">
-    <h3>Spins Today</h3>
-    <p class="big-number counter" data-target="428">0</p>
-  </div>
-</section>
-
-<section class="spin-section">
-  <div class="wheel-container">
-    <div class="wheel" id="wheel"></div>
-    <button class="btn-primary spin-btn">SPIN NOW</button>
-  </div>
-</section>
-
-<footer>
-  © 2026 Zeiterstrats — The GTA Strategy Empire
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
